@@ -9,9 +9,9 @@
 
 <img title="" src="screenshots/3.png" alt="" width="400"> <img title="" src="screenshots/4.png" alt="" width="410">
 
-**FolderPlay** is a minimalist music player whose only purpose is to let you enjoy your local music collection by showing you the **folders exactly as you have organized them on your disk**. 
+**FolderPlay** is a minimalist music player developed in **Rust and GTK4**. Its philosophy is simple: letting you enjoy your local collection by faithfully **respecting your disk's folder structure—it**, doesn't group by artist, album, or genre. It simply respects your order.
 
-FolderPlay does not group by artist, album, genre, or anything else… It respects the order you defined. It also has a strong focus on **Lossless Hi-Res audio** playback.
+Designed with a strong focus on **Lossless Hi-Res audio** playback.
 
 ## Features!
 
@@ -25,4 +25,3 @@ FolderPlay does not group by artist, album, genre, or anything else… It respec
 - Fluid adaptive UI for different screen sizes.
 - Blurs the background color based on the dominant color of the currently playing track's cover art.
 - Light and Dark mode.
-- Built following the GNOME Human Interface Guidelines, using GTK4, Python, libadwaita, GStreamer, GIO, and GstPbutils.
