@@ -7,7 +7,7 @@
 
 ![](screenshots/2.png)
 
-<img title="" src="screenshots/3.png" alt="" width="390"> <img title="" src="screenshots/4.png" alt="" width="410">
+<img title="" src="screenshots/3.png" alt="" width="400"> <img title="" src="screenshots/4.png" alt="" width="410">
 
 **FolderPlay** is a minimalist music player whose only purpose is to let you enjoy your local music collection by showing you the **folders exactly as you have organized them on your disk**. 
 
