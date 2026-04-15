@@ -29,14 +29,12 @@
     <name>Developer name</name>
   </developer>
 
-  <url type="homepage">https://www.siddharta.cl/</url>
+  <url type="homepage">https://github.com/juancarlosbernal/FolderPlay</url>
   <url type="vcs-browser">https://www.siddharta.cl/</url>
   <url type="bugtracker">https://www.siddharta.cl/</url>
   <url type="translate">https://www.siddharta.cl/</url>
-  <url type="faq">https://www.siddharta.cl/</url>
   <url type="help">https://www.siddharta.cl/</url>
   <url type="donation">https://www.siddharta.cl/</url>
-  <url type="contact">https://www.siddharta.cl/</url>
   <url type="contribute">https://www.siddharta.cl/</url>
 
   <translation type="gettext">folderplay</translation>
@@ -56,19 +54,19 @@
     <!-- FIXME: Host the screenshots (e.g. on GitHub) and replace the URLs -->
     <!-- e.g. https://raw.githubusercontent.com/YOUR_USER/FolderPlay/HEAD/screenshots/1.png -->
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/juancarlosbernal/FolderPlay/HEAD/screenshots/1.png</image>
+      <image>https://github.com/juancarlosbernal/FolderPlay/blob/main/screenshots/1.png</image>
       <caption>Browsing a Hi-Res FLAC folder in list view</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/juancarlosbernal/FolderPlay/HEAD/screenshots/2.png</image>
+      <image>https://github.com/juancarlosbernal/FolderPlay/blob/main/screenshots/2.png</image>
       <caption>Grid folder view with cover art and adaptive background color</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/juancarlosbernal/FolderPlay/HEAD/screenshots/3.png</image>
+      <image>https://github.com/juancarlosbernal/FolderPlay/blob/main/screenshots/3.png</image>
       <caption>Compact player view</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/juancarlosbernal/FolderPlay/HEAD/screenshots/4.png</image>
+      <image>https://github.com/juancarlosbernal/FolderPlay/blob/main/screenshots/4.png</image>
       <caption>Adaptive narrow player view</caption>
     </screenshot>
   </screenshots>

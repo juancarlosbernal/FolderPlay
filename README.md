@@ -1,7 +1,7 @@
 <p align="center"><img src="data/icons/hicolor/scalable/apps/org.gnome.folderplay.svg">
 <h1 align="center">FolderPlay</h1>
 
-<p align="center"><a href='https://flathub.org/apps/com.jeffser.Alpaca'><img width='190' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/></a></p>
+<p align="center"><a href='https://github.com/juancarlosbernal/FolderPlay'><img width='190' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/></a></p>
 
 ![](screenshots/1.png)
 
