@@ -54,19 +54,19 @@
     <!-- FIXME: Host the screenshots (e.g. on GitHub) and replace the URLs -->
     <!-- e.g. https://raw.githubusercontent.com/YOUR_USER/FolderPlay/HEAD/screenshots/1.png -->
     <screenshot type="default">
-      <image>https://github.com/juancarlosbernal/FolderPlay/blob/main/screenshots/1.png</image>
+      <image>https://raw.githubusercontent.com/juancarlosbernal/FolderPlay/HEAD/screenshots/1.png</image>
       <caption>Browsing a Hi-Res FLAC folder in list view</caption>
     </screenshot>
     <screenshot>
-      <image>https://github.com/juancarlosbernal/FolderPlay/blob/main/screenshots/2.png</image>
+      <image>https://raw.githubusercontent.com/juancarlosbernal/FolderPlay/HEAD/screenshots/2.png</image>
       <caption>Grid folder view with cover art and adaptive background color</caption>
     </screenshot>
     <screenshot>
-      <image>https://github.com/juancarlosbernal/FolderPlay/blob/main/screenshots/3.png</image>
+      <image>https://raw.githubusercontent.com/juancarlosbernal/FolderPlay/HEAD/screenshots/3.png</image>
       <caption>Compact player view</caption>
     </screenshot>
     <screenshot>
-      <image>https://github.com/juancarlosbernal/FolderPlay/blob/main/screenshots/4.png</image>
+      <image>https://raw.githubusercontent.com/juancarlosbernal/FolderPlay/HEAD/screenshots/4.png</image>
       <caption>Adaptive narrow player view</caption>
     </screenshot>
   </screenshots>
