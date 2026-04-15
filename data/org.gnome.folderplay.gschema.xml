@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="folderplay">
+	<schema id="org.gnome.folderplay" path="/org/gnome/folderplay/">
+		<key name="music-folder" type="s">
+			<default>''</default>
+			<summary>Legacy music folder path (migrated to music-folders)</summary>
+		</key>
+		<key name="music-folders" type="as">
+			<default>[]</default>
+			<summary>List of music folder paths</summary>
+		</key>
+		<key name="folder-display-names" type="as">
+			<default>[]</default>
+			<summary>Pairs of internal_path, display_name for portal path mapping</summary>
+		</key>
+		<key name="color-scheme" type="i">
+			<default>0</default>
+			<summary>Color scheme (0=default, 1=force-light, 4=force-dark)</summary>
+		</key>
+		<key name="audio-output" type="s">
+			<default>'auto'</default>
+			<summary>Audio output backend (auto, hifi, or standard)</summary>
+		</key>
+		<key name="anti-bad-bunny" type="b">
+			<default>false</default>
+			<summary>Hide Bad Bunny songs and folders from the library</summary>
+		</key>
+	</schema>
+</schemalist>

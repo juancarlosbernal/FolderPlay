@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=FolderPlay
+Exec=folderplay %U
+Icon=org.gnome.folderplay
+Terminal=false
+Type=Application
+Categories=AudioVideo;Audio;Music;Player;
+Keywords=GTK;Music;Player;Audio;
+StartupNotify=true
+DBusActivatable=true
+MimeType=audio/mpeg;audio/flac;audio/ogg;audio/x-opus+ogg;audio/x-vorbis+ogg;audio/wav;audio/x-wav;audio/aac;audio/mp4;audio/x-m4a;audio/x-ms-wma;audio/aiff;audio/x-aiff;audio/x-ape;audio/x-wavpack;audio/x-matroska;audio/x-dsf;audio/x-dff;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.12"/>
+  <requires lib="Adw" version="1.4"/>
+  <template class="FolderplayWindow" parent="AdwApplicationWindow">
+    <property name="title">FolderPlay</property>
+    <property name="default-width">1100</property>
+    <property name="default-height">700</property>
+    <property name="content">
+      <object class="GtkBox" id="main_box">
+        <property name="orientation">horizontal</property>
+        <property name="hexpand">true</property>
+        <property name="vexpand">true</property>
+      </object>
+    </property>
+  </template>
+</interface>

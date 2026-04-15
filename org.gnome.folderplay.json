@@ -1,0 +1,42 @@
+{
+    "id" : "org.gnome.folderplay",
+    "runtime" : "org.gnome.Platform",
+    "runtime-version" : "49",
+    "sdk" : "org.gnome.Sdk",
+    "command" : "folderplay",
+    "finish-args" : [
+        "--socket=wayland",
+        "--socket=pulseaudio",
+        "--filesystem=xdg-run/pipewire-0",
+        "--filesystem=xdg-config/pipewire/pipewire.conf.d:create",
+        "--device=all",
+        "--filesystem=host:ro"
+    ],
+    "cleanup" : [
+        "/include",
+        "/lib/pkgconfig",
+        "/man",
+        "/share/doc",
+        "/share/gtk-doc",
+        "/share/man",
+        "/share/pkgconfig",
+        "*.la",
+        "*.a"
+    ],
+    "modules" : [
+        {
+            "name" : "folderplay",
+            "builddir" : true,
+            "buildsystem" : "meson",
+            "post-install" : [
+                "gtk4-update-icon-cache -qtf ${FLATPAK_DEST}/share/icons/hicolor"
+            ],
+            "sources" : [
+                {
+                    "type" : "dir",
+                    "path" : "."
+                }
+            ]
+        }
+    ]
+}

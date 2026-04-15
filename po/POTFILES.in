@@ -1,0 +1,9 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
+data/org.gnome.folderplay.desktop.in
+data/org.gnome.folderplay.metainfo.xml.in
+data/org.gnome.folderplay.gschema.xml
+src/main.py
+src/preferences.py
+src/window.py
+src/window.ui
