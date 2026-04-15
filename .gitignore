@@ -1,15 +1,19 @@
+# Rust build artifacts
+/target/
+
+# Meson build directories
 _build/
+builddir/
+
+# Flatpak build cache
+.flatpak-builder/
+
+# Editor / IDE
 .vscode/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.egg-info/
-.eggs/
-dist/
 *.swp
 *.swo
 *~
-.venv/
-.env
+
+# OS
+.DS_Store
 

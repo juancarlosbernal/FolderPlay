@@ -241,13 +241,12 @@ msgstr ""
 
 #: src/main.py:72
 msgid ""
-"FolderPlay is a minimalist music player whose only purpose is to let you "
-"enjoy your local music collection by showing you the folders exactly as you "
-"have organized them on your disk.\n"
+"FolderPlay is a minimalist music player developed in Rust and GTK4. Its "
+"philosophy is simple: letting you enjoy your local collection by faithfully "
+"respecting your disk's folder structure—it doesn't group by artist, album, "
+"or genre. It simply respects your order.\n"
 "\n"
-"FolderPlay does not group by artist, album, genre, or anything else… It "
-"respects the order you defined. It also has a strong focus on Lossless Hi-"
-"Res audio playback."
+"Designed with a strong focus on Lossless Hi-Res audio playback."
 msgstr ""
 
 #: src/preferences.py:14
@@ -332,11 +331,11 @@ msgid "Folder-based music player"
 msgstr ""
 
 #: data/org.gnome.folderplay.metainfo.xml.in:10
-msgid "FolderPlay is a minimalist music player whose only purpose is to let you enjoy your local music collection by showing you the folders exactly as you have organized them on your disk."
+msgid "FolderPlay is a minimalist music player developed in Rust and GTK4. Its philosophy is simple: letting you enjoy your local collection by faithfully respecting your disk's folder structure—it doesn't group by artist, album, or genre. It simply respects your order."
 msgstr ""
 
 #: data/org.gnome.folderplay.metainfo.xml.in:11
-msgid "FolderPlay does not group by artist, album, genre, or anything else… It respects the order you defined. It also has a strong focus on Lossless Hi-Res audio playback."
+msgid "Designed with a strong focus on Lossless Hi-Res audio playback."
 msgstr ""
 
 #: data/org.gnome.folderplay.metainfo.xml.in:12

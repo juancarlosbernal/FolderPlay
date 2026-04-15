@@ -1,0 +1,22 @@
+[package]
+name = "folderplay"
+version = "1.0.0"
+edition = "2021"
+license = "GPL-3.0-or-later"
+authors = ["Juan Carlos Bernal"]
+
+[dependencies]
+gtk = { version = "0.9", package = "gtk4", features = ["v4_12"] }
+adw = { version = "0.7", package = "libadwaita", features = ["v1_6"] }
+glib = "0.20"
+gio = "0.20"
+gdk = { version = "0.9", package = "gdk4" }
+pango = "0.20"
+graphene = { version = "0.20", package = "graphene-rs" }
+gst = { version = "0.23", package = "gstreamer" }
+gst_pbutils = { version = "0.23", package = "gstreamer-pbutils" }
+rusqlite = { version = "0.32", features = ["bundled"] }
+gettext-rs = { version = "0.7", features = ["gettext-system"] }
+
+[build-dependencies]
+glib-build-tools = "0.20"

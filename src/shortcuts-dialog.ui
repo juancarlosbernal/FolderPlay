@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object class="AdwShortcutsDialog" id="shortcuts_dialog">
+  <object class="GtkShortcutsWindow" id="shortcuts_dialog">
+    <property name="modal">True</property>
     <child>
-      <object class="AdwShortcutsSection">
+      <object class="GtkShortcutsSection">
         <property name="title" translatable="yes">Shortcuts</property>
         <child>
-          <object class="AdwShortcutsItem">
-            <property name="title" translatable="yes" context="shortcut window">Play / Pause</property>
-            <property name="action-name">win.play-pause</property>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes">Playback</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Play / Pause</property>
+                <property name="accelerator">space</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Next Track</property>
+                <property name="accelerator">Right</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Previous Track</property>
+                <property name="accelerator">Left</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="AdwShortcutsItem">
-            <property name="title" translatable="yes" context="shortcut window">Next Track</property>
-            <property name="accelerator">Right</property>
-          </object>
-        </child>
-        <child>
-          <object class="AdwShortcutsItem">
-            <property name="title" translatable="yes" context="shortcut window">Previous Track</property>
-            <property name="accelerator">Left</property>
-          </object>
-        </child>
-        <child>
-          <object class="AdwShortcutsItem">
-            <property name="title" translatable="yes" context="shortcut window">Open Folder</property>
-            <property name="action-name">win.open-folder</property>
-          </object>
-        </child>
-        <child>
-          <object class="AdwShortcutsItem">
-            <property name="title" translatable="yes" context="shortcut window">Quit</property>
-            <property name="action-name">app.quit</property>
+          <object class="GtkShortcutsGroup">
+            <property name="title" translatable="yes">Application</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Open Folder</property>
+                <property name="accelerator">&lt;Control&gt;o</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="title" translatable="yes" context="shortcut window">Quit</property>
+                <property name="accelerator">&lt;Control&gt;q</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
