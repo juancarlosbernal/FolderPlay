@@ -221,6 +221,13 @@ impl AudioPlayer {
     pub fn set_audio_output(&self, output_type: &str) {
         let was_playing = self.imp().is_playing.get();
         let uri = self.imp().current_uri.borrow().clone();
+        // Save position before stopping so we can resume at the same point.
+        let saved_pos = if was_playing {
+            self.imp().playbin.borrow().as_ref()
+                .and_then(|pb| pb.query_position::<gst::ClockTime>())
+        } else {
+            None
+        };
         if was_playing {
             self.stop();
         }
@@ -259,6 +266,20 @@ impl AudioPlayer {
                 *self.imp().current_uri.borrow_mut() = Some(uri.clone());
                 playbin.set_property("uri", &uri);
                 playbin.set_state(gst::State::Playing).ok();
+                // Restore playback position after pipeline reaches Playing.
+                if let Some(pos) = saved_pos {
+                    let obj_weak = self.downgrade();
+                    glib::timeout_add_local_once(std::time::Duration::from_millis(200), move || {
+                        if let Some(obj) = obj_weak.upgrade() {
+                            if let Some(pb) = obj.imp().playbin.borrow().as_ref() {
+                                pb.seek_simple(
+                                    gst::SeekFlags::FLUSH | gst::SeekFlags::KEY_UNIT,
+                                    pos,
+                                ).ok();
+                            }
+                        }
+                    });
+                }
             }
         }
     }
