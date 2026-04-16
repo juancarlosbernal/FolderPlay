@@ -1,7 +1,9 @@
 <p align="center"><img src="data/icons/hicolor/scalable/apps/org.gnome.folderplay.svg">
 <h1 align="center">FolderPlay</h1>
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-![Made with Rust](https://img.shields.io/badge/Made_with-Rust-000000?style=flat&logo=rust&logoColor=white)
+![Static Badge](https://img.shields.io/badge/Licence-GPLv3-blue) ![Static Badge](https://img.shields.io/badge/Made_with-Rust-orange)
+
+
+
 
 <p align="center"><a href='https://github.com/juancarlosbernal/FolderPlay'><img width='190' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/></a></p>
 
