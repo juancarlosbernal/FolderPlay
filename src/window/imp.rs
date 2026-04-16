@@ -269,16 +269,17 @@ impl AdwApplicationWindowImpl for FolderplayWindow {}
 impl FolderplayWindow {
     // ── CSS ────────────────────────────────────────────────────────
     fn setup_dynamic_css(&self) {
+        let Some(display) = gdk::Display::default() else { return };
         let css = gtk::CssProvider::new();
         css.load_from_resource("/io/github/juancarlosbernal/FolderPlay/style.css");
         gtk::style_context_add_provider_for_display(
-            &gdk::Display::default().unwrap(),
+            &display,
             &css,
             gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
         );
         let dynamic = gtk::CssProvider::new();
         gtk::style_context_add_provider_for_display(
-            &gdk::Display::default().unwrap(),
+            &display,
             &dynamic,
             gtk::STYLE_PROVIDER_PRIORITY_APPLICATION + 1,
         );

@@ -247,8 +247,9 @@ impl LibraryDB {
             "SELECT path FROM songs WHERE ({root_cond})"
         );
         if let Some(artist) = exclude_artist {
-            sql.push_str(" AND LOWER(COALESCE(artist,'')) NOT LIKE ?");
-            root_params.push(format!("%{}%", artist.to_lowercase()));
+            sql.push_str(" AND LOWER(COALESCE(artist,'')) NOT LIKE ? ESCAPE '\\'");
+            let escaped = artist.to_lowercase().replace('%', "\\%").replace('_', "\\_");
+            root_params.push(format!("%{escaped}%"));
         }
         sql.push_str(" ORDER BY path COLLATE NOCASE");
         let mut stmt = conn.prepare(&sql).unwrap();

@@ -395,11 +395,12 @@ fn set_pipewire_rates(rates: &str) {
 }
 
 fn write_hifi_config() {
-    // Use $HOME/.config/pipewire/pipewire.conf.d because:
-    // - PipeWire reads from the real ~/.config, not from XDG_CONFIG_HOME
-    // - Inside Flatpak, XDG_CONFIG_HOME = ~/.var/app/.../config (sandbox-only)
-    // - The manifest grants --filesystem=xdg-config/pipewire/pipewire.conf.d:create
-    //   which mounts the HOST's ~/.config/pipewire/pipewire.conf.d at that same path
+    // Persistent PipeWire config for Hi-Res sample rates.
+    // This only works outside Flatpak (native installs), because the Flathub
+    // linter blocks --filesystem=xdg-config/pipewire:create.
+    // Inside Flatpak, set_pipewire_rates() via pw-metadata (PipeWire socket)
+    // is the primary mechanism — it sets rates at runtime for the current
+    // PipeWire session without needing filesystem access.
     let conf_dir = dirs_home().join(".config").join("pipewire").join("pipewire.conf.d");
     let conf_path = conf_dir.join("folderplay-hifi.conf");
     if !conf_path.exists() {
