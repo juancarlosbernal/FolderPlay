@@ -1636,10 +1636,10 @@ impl FolderplayWindow {
             .build();
 
         let settings = gio::Settings::new(config::APP_ID);
-        let folders: Vec<String> = settings.strv("music-folders").iter().map(|s| s.to_string()).collect();
+        let initial_folders: Vec<String> = settings.strv("music-folders").iter().map(|s| s.to_string()).collect();
 
         let group_ref = group.clone();
-        for f in &folders {
+        for f in &initial_folders {
             let row = adw::ActionRow::builder()
                 .title(Path::new(f).file_name().unwrap_or_default().to_string_lossy().to_string())
                 .build();
@@ -1713,7 +1713,17 @@ impl FolderplayWindow {
 
         let obj_weak = self.obj().downgrade();
         dlg.connect_closed(move |_| {
-            if let Some(o) = obj_weak.upgrade() { o.imp().load_all_folders(); }
+            if let Some(o) = obj_weak.upgrade() {
+                let settings = gio::Settings::new(config::APP_ID);
+                let current: Vec<String> = settings.strv("music-folders").iter()
+                    .map(|s| s.to_string()).filter(|f| Path::new(f).is_dir()).collect();
+                let has_new = current.iter().any(|f| !initial_folders.contains(f));
+                if has_new && !current.is_empty() {
+                    o.imp().start_scan_all_folders(current);
+                } else {
+                    o.imp().load_all_folders();
+                }
+            }
         });
         dlg.present(Some(&*self.obj()));
     }
@@ -1786,6 +1796,30 @@ impl FolderplayWindow {
                 deep_scan_and_index(&db, &folders2, &shutdown, obj_weak, false);
             });
         }
+    }
+
+    /// Show the loading screen and launch a deep scan with progress reporting
+    /// for multiple folders (used when the Manage Folders dialog adds new ones).
+    fn start_scan_all_folders(&self, folders: Vec<String>) {
+        *self.root_folder.borrow_mut() = None;
+        *self.current_folder.borrow_mut() = None;
+        self.nav_stack.borrow_mut().clear();
+        self.back_btn.borrow().as_ref().unwrap().set_visible(false);
+        self.folder_label.borrow().as_ref().unwrap().set_label(&gettext("Folders"));
+        *self.playlist.borrow_mut() = vec![];
+        self.current_index.set(-1);
+
+        self.update_scan_progress(0);
+        self.browse_stack.borrow().as_ref().unwrap().set_visible_child_name("loading");
+        self.filter_model.borrow().as_ref().unwrap().set_filter(None::<&gtk::Filter>);
+        self.search_entry.borrow().as_ref().unwrap().set_text("");
+
+        let db = self.db.borrow().as_ref().unwrap().clone();
+        let shutdown = self.shutdown.clone();
+        let obj_weak: glib::SendWeakRef<super::FolderplayWindow> = self.obj().downgrade().into();
+        std::thread::spawn(move || {
+            deep_scan_and_index(&db, &folders, &shutdown, obj_weak, true);
+        });
     }
 
     /// Show the loading screen and launch a deep scan with progress reporting.
