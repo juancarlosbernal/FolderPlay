@@ -13,9 +13,8 @@
         "--share=ipc",
         "--socket=pulseaudio",
         "--filesystem=xdg-run/pipewire-0",
-        "--filesystem=xdg-config/pipewire/pipewire.conf.d:create",
         "--device=all",
-        "--filesystem=host:ro"
+        "--filesystem=xdg-music:ro"
     ],
     "build-options" : {
         "append-path" : "/usr/lib/sdk/rust-stable/bin",
