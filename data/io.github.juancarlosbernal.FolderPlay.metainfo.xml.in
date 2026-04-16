@@ -9,7 +9,6 @@
   <description>
     <p>FolderPlay is a minimalist music player developed in Rust and GTK4. Its philosophy is simple: letting you enjoy your local collection by faithfully respecting your disk's folder structure—it doesn't group by artist, album, or genre. It simply respects your order.</p>
     <p>Designed with a strong focus on Lossless Hi-Res audio playback.</p>
-    <p>Features</p>
     <ul>
       <li>Above all, simple and intuitive.</li>
       <li>Displays your music folders in the exact order you have them on your disk.</li>
@@ -33,15 +32,10 @@
   <url type="bugtracker">https://github.com/juancarlosbernal/FolderPlay/issues</url>
   <url type="donation">https://ko-fi.com/G2G31XWNFB</url>
 
-
   <translation type="gettext">folderplay</translation>
-  <!-- All graphical applications having a desktop file must have this tag in the MetaInfo.
-     If this is present, appstreamcli compose will pull icons, keywords and categories from the desktop file. -->
   <launchable type="desktop-id">io.github.juancarlosbernal.FolderPlay.desktop</launchable>
-  <!-- Use the OARS website (https://hughsie.github.io/oars/generate.html) to generate these and make sure to use oars-1.1 -->
   <content_rating type="oars-1.1" />
 
-  <!-- Applications should set a brand color in both light and dark variants like so -->
   <branding>
     <color type="primary" scheme_preference="light">#3584e4</color>
     <color type="primary" scheme_preference="dark">#1a5fb4</color>

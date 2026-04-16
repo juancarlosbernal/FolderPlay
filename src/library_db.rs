@@ -263,9 +263,10 @@ impl LibraryDB {
         let mut parts = Vec::new();
         let mut params = Vec::new();
         for p in root_paths {
-            parts.push("folder = ? OR folder LIKE ?".to_string());
+            parts.push("folder = ? OR folder LIKE ? ESCAPE '\\'".to_string());
             params.push(p.clone());
-            params.push(format!("{}/%", p.trim_end_matches('/')));
+            let escaped = p.trim_end_matches('/').replace('%', "\\%").replace('_', "\\_");
+            params.push(format!("{escaped}/%"));
         }
         (parts.join(" OR "), params)
     }
