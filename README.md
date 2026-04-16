@@ -2,6 +2,7 @@
 <h1 align="center">FolderPlay</h1>
 ![License](https://img.shields.io/github/license/juancarlosbernal/FolderPlay)
 
+
 <p align="center"><a href='https://github.com/juancarlosbernal/FolderPlay'><img width='190' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/></a></p>
 
 ![](screenshots/1.png)
