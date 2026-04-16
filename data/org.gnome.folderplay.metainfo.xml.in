@@ -29,8 +29,10 @@
   </developer>
 
   <url type="homepage">https://github.com/juancarlosbernal/FolderPlay</url>
+    <url type="donation">https://ko-fi.com/G2G31XWNFB</url>
   <url type="vcs-browser">https://github.com/juancarlosbernal/FolderPlay</url>
   <url type="bugtracker">https://github.com/juancarlosbernal/FolderPlay/issues</url>
+
 
   <translation type="gettext">folderplay</translation>
   <!-- All graphical applications having a desktop file must have this tag in the MetaInfo.
