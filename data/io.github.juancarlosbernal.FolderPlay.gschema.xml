@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="folderplay">
-	<schema id="org.gnome.folderplay" path="/org/gnome/folderplay/">
+	<schema id="io.github.juancarlosbernal.FolderPlay" path="/io/github/juancarlosbernal/FolderPlay/">
 		<key name="music-folder" type="s">
 			<default>''</default>
 			<summary>Legacy music folder path (migrated to music-folders)</summary>

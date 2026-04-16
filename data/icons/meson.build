@@ -1,4 +1,4 @@
-application_id = 'org.gnome.folderplay'
+application_id = 'io.github.juancarlosbernal.FolderPlay'
 
 scalable_dir = 'hicolor' / 'scalable' / 'apps'
 install_data(

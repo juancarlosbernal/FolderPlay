@@ -32,15 +32,15 @@ mod imp {
 
             // ── Audio ──────────────────────────────────────────────
             let audio = adw::PreferencesGroup::builder()
-                .title(&gettext("Audio Output"))
-                .description(&gettext(
+                .title(gettext("Audio Output"))
+                .description(gettext(
                     "HiFi sends audio directly to your DAC without \
                      resampling. Standard uses PulseAudio for maximum compatibility.",
                 ))
                 .build();
 
             let output_row = adw::ComboRow::builder()
-                .title(&gettext("Output"))
+                .title(gettext("Output"))
                 .build();
 
             let out_model = gtk::StringList::new(&[
@@ -73,12 +73,12 @@ mod imp {
 
             // ── Appearance ─────────────────────────────────────────
             let appearance = adw::PreferencesGroup::builder()
-                .title(&gettext("Appearance"))
+                .title(gettext("Appearance"))
                 .build();
 
             let scheme_row = adw::ComboRow::builder()
-                .title(&gettext("Style"))
-                .subtitle(&gettext("Choose between light and dark appearance"))
+                .title(gettext("Style"))
+                .subtitle(gettext("Choose between light and dark appearance"))
                 .build();
             let model = gtk::StringList::new(&[
                 &gettext("System"),

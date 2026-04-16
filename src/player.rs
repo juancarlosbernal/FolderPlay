@@ -59,7 +59,14 @@ mod imp {
 
             playbin.set_property("volume", 0.7f64);
 
-            let bus = playbin.bus().unwrap();
+            let bus = match playbin.bus() {
+                Some(b) => b,
+                None => {
+                    eprintln!("Failed to get GStreamer bus");
+                    *self.playbin.borrow_mut() = Some(playbin);
+                    return;
+                }
+            };
             bus.add_signal_watch();
 
             let obj_weak = self.obj().downgrade();
@@ -78,9 +85,10 @@ mod imp {
 
             let obj_weak = self.obj().downgrade();
             bus.connect_local("message::error", false, move |args| {
-                let msg = args[1].get::<gst::Message>().unwrap();
-                if let gst::MessageView::Error(err) = msg.view() {
-                    eprintln!("GStreamer error: {}", err.error());
+                if let Ok(msg) = args[1].get::<gst::Message>() {
+                    if let gst::MessageView::Error(err) = msg.view() {
+                        eprintln!("GStreamer error: {}", err.error());
+                    }
                 }
                 if let Some(obj) = obj_weak.upgrade() {
                     glib::idle_add_local_once(glib::clone!(
@@ -93,7 +101,7 @@ mod imp {
 
             let obj_weak = self.obj().downgrade();
             bus.connect_local("message::state-changed", false, move |args| {
-                let msg = args[1].get::<gst::Message>().unwrap();
+                let Ok(msg) = args[1].get::<gst::Message>() else { return None };
                 if let Some(obj) = obj_weak.upgrade() {
                     let pb = obj.imp().playbin.borrow();
                     let pb = pb.as_ref().unwrap();
@@ -395,8 +403,11 @@ fn write_hifi_config() {
     let conf_dir = dirs_home().join(".config").join("pipewire").join("pipewire.conf.d");
     let conf_path = conf_dir.join("folderplay-hifi.conf");
     if !conf_path.exists() {
-        std::fs::create_dir_all(&conf_dir).ok();
-        std::fs::write(
+        if let Err(e) = std::fs::create_dir_all(&conf_dir) {
+            eprintln!("Failed to create PipeWire config dir: {e}");
+            return;
+        }
+        if let Err(e) = std::fs::write(
             &conf_path,
             format!(
                 "# Added by FolderPlay for Hi-Res playback\n\
@@ -405,7 +416,9 @@ fn write_hifi_config() {
                  }}\n",
                 rates_str(HIFI_RATES)
             ),
-        ).ok();
+        ) {
+            eprintln!("Failed to write PipeWire HiFi config: {e}");
+        }
     }
 }
 

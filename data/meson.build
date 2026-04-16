@@ -1,6 +1,6 @@
 desktop_file = i18n.merge_file(
-        input: 'org.gnome.folderplay.desktop.in',
-       output: 'org.gnome.folderplay.desktop',
+        input: 'io.github.juancarlosbernal.FolderPlay.desktop.in',
+       output: 'io.github.juancarlosbernal.FolderPlay.desktop',
          type: 'desktop',
        po_dir: '../po',
       install: true,
@@ -13,8 +13,8 @@ if desktop_utils.found()
 endif
 
 appstream_file = i18n.merge_file(
-        input: 'org.gnome.folderplay.metainfo.xml.in',
-       output: 'org.gnome.folderplay.metainfo.xml',
+        input: 'io.github.juancarlosbernal.FolderPlay.metainfo.xml.in',
+       output: 'io.github.juancarlosbernal.FolderPlay.metainfo.xml',
        po_dir: '../po',
       install: true,
   install_dir: get_option('datadir') / 'metainfo'
@@ -24,17 +24,15 @@ appstreamcli = find_program('appstreamcli', required: false, disabler: true)
 test('Validate appstream file', appstreamcli,
      args: ['validate', '--no-net', '--explain', appstream_file])
 
-install_data('org.gnome.folderplay.gschema.xml',
+install_data('io.github.juancarlosbernal.FolderPlay.gschema.xml',
   install_dir: get_option('datadir') / 'glib-2.0' / 'schemas'
 )
 
 # Install screenshots so they are available in the Flatpak bundle.
-# Update the <image> URLs in org.gnome.folderplay.metainfo.xml.in to point
-# to your hosted copies (e.g. https://raw.githubusercontent.com/USER/FolderPlay/HEAD/screenshots/N.png)
 install_data(
   ['../screenshots/1.png', '../screenshots/2.png',
    '../screenshots/3.png', '../screenshots/4.png'],
-  install_dir: get_option('datadir') / 'app-info' / 'screenshots' / 'org.gnome.folderplay'
+  install_dir: get_option('datadir') / 'app-info' / 'screenshots' / 'io.github.juancarlosbernal.FolderPlay'
 )
 
 compile_schemas = find_program('glib-compile-schemas', required: false, disabler: true)
@@ -46,8 +44,8 @@ test('Validate schema file',
 service_conf = configuration_data()
 service_conf.set('bindir', get_option('prefix') / get_option('bindir'))
 configure_file(
-  input: 'org.gnome.folderplay.service.in',
-  output: 'org.gnome.folderplay.service',
+  input: 'io.github.juancarlosbernal.FolderPlay.service.in',
+  output: 'io.github.juancarlosbernal.FolderPlay.service',
   configuration: service_conf,
   install_dir: get_option('datadir') / 'dbus-1' / 'services'
 )

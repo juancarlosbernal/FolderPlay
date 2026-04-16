@@ -213,7 +213,7 @@ impl LibraryDB {
                  FROM songs WHERE folder=?1 ORDER BY name COLLATE NOCASE",
             )
             .unwrap();
-        stmt.query_map(params![folder_path], |r| Self::row_to_song(r))
+        stmt.query_map(params![folder_path], Self::row_to_song)
             .unwrap()
             .filter_map(|r| r.ok())
             .collect()
@@ -429,8 +429,8 @@ impl LibraryDB {
         for c in children {
             Self::delete_folder_recursive_inner(conn, &c);
         }
-        conn.execute("DELETE FROM songs WHERE folder=?1", params![path]).ok();
         conn.execute("DELETE FROM song_covers WHERE song_path IN (SELECT path FROM songs WHERE folder=?1)", params![path]).ok();
+        conn.execute("DELETE FROM songs WHERE folder=?1", params![path]).ok();
         conn.execute("DELETE FROM covers WHERE folder_path=?1", params![path]).ok();
         conn.execute("DELETE FROM folders WHERE path=?1", params![path]).ok();
     }
@@ -526,6 +526,7 @@ impl LibraryDB {
         ).ok();
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub fn update_song_metadata(
         &self, path: &str, title: &str, artist: &str, album: &str,
         year: &str, bitrate: i32, sample_rate: i32, bits_per_sample: i32, duration: f64,
@@ -670,8 +671,9 @@ impl LibraryDB {
 
         let mut word_conds = Vec::new();
         for w in words {
-            let pattern = format!("%{w}%");
-            word_conds.push("(title LIKE ? OR artist LIKE ? OR album LIKE ? OR name LIKE ?)".to_string());
+            let escaped = w.replace('%', "\\%").replace('_', "\\_");
+            let pattern = format!("%{escaped}%");
+            word_conds.push("(title LIKE ? ESCAPE '\\' OR artist LIKE ? ESCAPE '\\' OR album LIKE ? ESCAPE '\\' OR name LIKE ? ESCAPE '\\')".to_string());
             for _ in 0..4 {
                 all_params.push(pattern.clone());
             }
@@ -684,7 +686,7 @@ impl LibraryDB {
         );
         let mut stmt = conn.prepare(&sql).unwrap();
         let p: Vec<&dyn rusqlite::ToSql> = all_params.iter().map(|v| v as &dyn rusqlite::ToSql).collect();
-        stmt.query_map(p.as_slice(), |r| Self::row_to_song(r))
+        stmt.query_map(p.as_slice(), Self::row_to_song)
             .unwrap()
             .filter_map(|r| r.ok())
             .collect()

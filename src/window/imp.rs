@@ -110,7 +110,7 @@ fn format_time(secs: f64) -> String {
 // ────────────────────────────────────────────────────────────────────
 
 #[derive(gtk::CompositeTemplate, Default)]
-#[template(resource = "/org/gnome/folderplay/window.ui")]
+#[template(resource = "/io/github/juancarlosbernal/FolderPlay/window.ui")]
 pub struct FolderplayWindow {
     #[template_child]
     pub main_box: TemplateChild<gtk::Box>,
@@ -129,6 +129,7 @@ pub struct FolderplayWindow {
     pub current_folder: RefCell<Option<String>>,
     pub root_folder: RefCell<Option<String>>,
 
+    #[allow(clippy::type_complexity)]
     pub bound_rows: RefCell<HashMap<String, Vec<(gtk::Box, gtk::Image, gtk::Image)>>>,
     pub list_store: RefCell<Option<gio::ListStore>>,
     pub grid_store: RefCell<Option<gio::ListStore>>,
@@ -198,6 +199,13 @@ impl ObjectSubclass for FolderplayWindow {
 }
 
 impl ObjectImpl for FolderplayWindow {
+    fn dispose(&self) {
+        self.shutdown.store(true, Ordering::Relaxed);
+        if let Some(p) = self.player.borrow().as_ref() {
+            p.cleanup();
+        }
+    }
+
     fn constructed(&self) {
         self.parent_constructed();
 
@@ -262,7 +270,7 @@ impl FolderplayWindow {
     // ── CSS ────────────────────────────────────────────────────────
     fn setup_dynamic_css(&self) {
         let css = gtk::CssProvider::new();
-        css.load_from_resource("/org/gnome/folderplay/style.css");
+        css.load_from_resource("/io/github/juancarlosbernal/FolderPlay/style.css");
         gtk::style_context_add_provider_for_display(
             &gdk::Display::default().unwrap(),
             &css,
@@ -318,7 +326,7 @@ impl FolderplayWindow {
 
         let search_btn = gtk::ToggleButton::builder()
             .icon_name("fp-edit-find-symbolic")
-            .tooltip_text(&gettext("Search"))
+            .tooltip_text(gettext("Search"))
             .build();
         search_btn.add_css_class("flat");
         search_btn.add_css_class("circular");
@@ -326,7 +334,7 @@ impl FolderplayWindow {
 
         let home_btn = gtk::Button::builder()
             .icon_name("fp-folder-open-symbolic")
-            .tooltip_text(&gettext("Go to root folder"))
+            .tooltip_text(gettext("Go to root folder"))
             .build();
         home_btn.add_css_class("flat");
         home_btn.add_css_class("circular");
@@ -341,7 +349,7 @@ impl FolderplayWindow {
 
         let grid_toggle = gtk::ToggleButton::builder()
             .icon_name("fp-grid-filled-symbolic")
-            .tooltip_text(&gettext("Grid view"))
+            .tooltip_text(gettext("Grid view"))
             .active(true)
             .build();
         grid_toggle.add_css_class("flat");
@@ -356,7 +364,7 @@ impl FolderplayWindow {
             .transition_type(gtk::RevealerTransitionType::SlideDown)
             .build();
         let search_entry = gtk::SearchEntry::builder()
-            .placeholder_text(&gettext("Search songs, artist or album…"))
+            .placeholder_text(gettext("Search songs, artist or album…"))
             .margin_start(12)
             .margin_end(12)
             .margin_top(6)
@@ -387,7 +395,7 @@ impl FolderplayWindow {
         nav.append(&back_btn);
 
         let folder_label = gtk::Label::builder()
-            .label(&gettext("Folders"))
+            .label(gettext("Folders"))
             .hexpand(true)
             .xalign(0.0)
             .ellipsize(pango::EllipsizeMode::End)
@@ -405,11 +413,11 @@ impl FolderplayWindow {
         // Empty state
         let empty = adw::StatusPage::builder()
             .icon_name("fp-folder-music-symbolic")
-            .title(&gettext("No Music Folder"))
-            .description(&gettext("Select a folder to start playing"))
+            .title(gettext("No Music Folder"))
+            .description(gettext("Select a folder to start playing"))
             .build();
         let add_btn = gtk::Button::builder()
-            .label(&gettext("Add Music Folder"))
+            .label(gettext("Add Music Folder"))
             .halign(gtk::Align::Center)
             .build();
         add_btn.add_css_class("pill");
@@ -420,8 +428,8 @@ impl FolderplayWindow {
         // Search empty
         let search_empty = adw::StatusPage::builder()
             .icon_name("fp-edit-find-symbolic")
-            .title(&gettext("No results found"))
-            .description(&gettext("Try another title, artist, or album"))
+            .title(gettext("No results found"))
+            .description(gettext("Try another title, artist, or album"))
             .build();
         browse_stack.add_named(&search_empty, Some("search-empty"));
 
@@ -510,7 +518,7 @@ impl FolderplayWindow {
 
         let dock_btn = gtk::Button::builder()
             .icon_name("fp-sidebar-show-symbolic")
-            .tooltip_text(&gettext("Toggle Browse Panel"))
+            .tooltip_text(gettext("Toggle Browse Panel"))
             .valign(gtk::Align::Center)
             .build();
         dock_btn.add_css_class("flat");
@@ -519,7 +527,7 @@ impl FolderplayWindow {
 
         let locate_btn = gtk::Button::builder()
             .icon_name("fp-playlist-symbolic")
-            .tooltip_text(&gettext("Go to Playing Folder"))
+            .tooltip_text(gettext("Go to Playing Folder"))
             .visible(false)
             .valign(gtk::Align::Center)
             .build();
@@ -530,7 +538,7 @@ impl FolderplayWindow {
         player_top.append(&gtk::Box::builder().hexpand(true).build());
 
         let hires_icon_player = gtk::Picture::for_resource(
-            "/org/gnome/folderplay/icons/scalable/actions/hires-22.png",
+            "/io/github/juancarlosbernal/FolderPlay/icons/scalable/actions/hires-22.png",
         );
         hires_icon_player.set_size_request(22, 22);
         hires_icon_player.set_can_shrink(false);
@@ -541,7 +549,7 @@ impl FolderplayWindow {
 
         let tag_btn = gtk::Button::builder()
             .icon_name("fp-tag-outline-symbolic")
-            .tooltip_text(&gettext("Song Info"))
+            .tooltip_text(gettext("Song Info"))
             .visible(false)
             .valign(gtk::Align::Center)
             .build();
@@ -551,7 +559,7 @@ impl FolderplayWindow {
 
         let menu_btn = gtk::MenuButton::builder()
             .icon_name("fp-open-menu-symbolic")
-            .tooltip_text(&gettext("Menu"))
+            .tooltip_text(gettext("Menu"))
             .valign(gtk::Align::Center)
             .build();
         menu_btn.add_css_class("flat");
@@ -561,7 +569,7 @@ impl FolderplayWindow {
 
         let win_minimize = gtk::Button::builder()
             .icon_name("fp-window-minimize-symbolic")
-            .tooltip_text(&gettext("Minimize"))
+            .tooltip_text(gettext("Minimize"))
             .valign(gtk::Align::Center)
             .build();
         win_minimize.add_css_class("circular");
@@ -570,7 +578,7 @@ impl FolderplayWindow {
 
         let win_close = gtk::Button::builder()
             .icon_name("fp-window-close-symbolic")
-            .tooltip_text(&gettext("Close"))
+            .tooltip_text(gettext("Close"))
             .valign(gtk::Align::Center)
             .build();
         win_close.add_css_class("circular");
@@ -638,7 +646,7 @@ impl FolderplayWindow {
         info.append(&title_label);
 
         let subtitle_label = gtk::Label::builder()
-            .label(&gettext("Select a song"))
+            .label(gettext("Select a song"))
             .ellipsize(pango::EllipsizeMode::End)
             .max_width_chars(35)
             .justify(gtk::Justification::Center)
@@ -691,7 +699,7 @@ impl FolderplayWindow {
 
         let repeat_btn = gtk::Button::builder()
             .icon_name(REPEAT_ICONS[REPEAT_CONSECUTIVE as usize])
-            .tooltip_text(&gettext("Consecutive"))
+            .tooltip_text(gettext("Consecutive"))
             .valign(gtk::Align::Center)
             .build();
         repeat_btn.add_css_class("circular");
@@ -724,7 +732,7 @@ impl FolderplayWindow {
 
         let vol_btn = gtk::MenuButton::builder()
             .icon_name("fp-speaker-2-symbolic")
-            .tooltip_text(&gettext("Volume"))
+            .tooltip_text(gettext("Volume"))
             .valign(gtk::Align::Center)
             .build();
         vol_btn.add_css_class("circular");
@@ -901,7 +909,7 @@ impl FolderplayWindow {
             row.append(&repeat_icon);
 
             let hires_box = gtk::Picture::for_resource(
-                "/org/gnome/folderplay/icons/scalable/actions/hires-22.png",
+                "/io/github/juancarlosbernal/FolderPlay/icons/scalable/actions/hires-22.png",
             );
             hires_box.set_size_request(22, 22);
             hires_box.set_can_shrink(false);
@@ -1075,7 +1083,7 @@ impl FolderplayWindow {
                 let row = li.child().and_downcast::<gtk::Box>();
                 let mut bound = obj.imp().bound_rows.borrow_mut();
                 if let Some(entries) = bound.get_mut(&path) {
-                    entries.retain(|(r, _, _)| row.as_ref().map_or(true, |rw| r != rw));
+                    entries.retain(|(r, _, _)| row.as_ref() != Some(r));
                     if entries.is_empty() {
                         bound.remove(&path);
                     }
@@ -1171,8 +1179,9 @@ impl FolderplayWindow {
             }
 
             let name = item.name();
-            let display = if name.len() > 20 {
-                format!("{}…", &name[..20])
+            let display = if name.chars().count() > 20 {
+                let truncated: String = name.chars().take(20).collect();
+                format!("{truncated}…")
             } else {
                 name
             };
@@ -1400,13 +1409,13 @@ impl FolderplayWindow {
 
             let search_has_focus = imp.search_entry.borrow()
                 .as_ref()
-                .map_or(false, |e| e.has_focus());
+                .is_some_and(|e| e.has_focus());
 
             // Backspace: navigate back only when search bar is empty/closed
             if keyval == gdk::Key::BackSpace && !search_has_focus {
                 let search_empty = imp.search_entry.borrow()
                     .as_ref()
-                    .map_or(true, |e| e.text().is_empty());
+                    .is_none_or(|e| e.text().is_empty());
                 if search_empty && !imp.nav_stack.borrow().is_empty() {
                     imp.navigate_back();
                     return glib::Propagation::Stop;
@@ -1543,7 +1552,7 @@ impl FolderplayWindow {
     fn on_anti_bad_bunny(&self) {
         let settings = gio::Settings::new(config::APP_ID);
         let dlg = adw::Dialog::builder()
-            .title(&gettext("Anti Bad Bunny"))
+            .title(gettext("Anti Bad Bunny"))
             .content_width(460)
             .content_height(280)
             .build();
@@ -1553,8 +1562,8 @@ impl FolderplayWindow {
 
         let page = adw::PreferencesPage::new();
         let group = adw::PreferencesGroup::builder()
-            .title(&gettext("Anti Bad Bunny"))
-            .description(&gettext(
+            .title(gettext("Anti Bad Bunny"))
+            .description(gettext(
                 "This function will remove from your collection any song \
                  by the artist Bad Bunny (to protect your mental health). \
                  Let's promote real music! (It doesn't delete the files \
@@ -1563,7 +1572,7 @@ impl FolderplayWindow {
             .build();
 
         let row = adw::SwitchRow::builder()
-            .title(&gettext("Anti Bad Bunny"))
+            .title(gettext("Anti Bad Bunny"))
             .active(settings.boolean("anti-bad-bunny"))
             .build();
 
@@ -1600,7 +1609,7 @@ impl FolderplayWindow {
 
     fn on_manage_folders(&self) {
         let dlg = adw::Dialog::builder()
-            .title(&gettext("Manage Folders"))
+            .title(gettext("Manage Folders"))
             .content_width(460)
             .content_height(400)
             .build();
@@ -1621,8 +1630,8 @@ impl FolderplayWindow {
             .build();
 
         let group = adw::PreferencesGroup::builder()
-            .title(&gettext("Music Folders"))
-            .description(&gettext("Add local folders to build your music library"))
+            .title(gettext("Music Folders"))
+            .description(gettext("Add local folders to build your music library"))
             .build();
 
         let settings = gio::Settings::new(config::APP_ID);
@@ -1631,12 +1640,12 @@ impl FolderplayWindow {
         let group_ref = group.clone();
         for f in &folders {
             let row = adw::ActionRow::builder()
-                .title(&Path::new(f).file_name().unwrap_or_default().to_string_lossy().to_string())
+                .title(Path::new(f).file_name().unwrap_or_default().to_string_lossy().to_string())
                 .build();
             row.add_prefix(&gtk::Image::from_icon_name("fp-folder-music-symbolic"));
             let remove_btn = gtk::Button::builder()
                 .icon_name("fp-minus-circle-outline-symbolic")
-                .tooltip_text(&gettext("Remove this folder"))
+                .tooltip_text(gettext("Remove this folder"))
                 .valign(gtk::Align::Center)
                 .build();
             remove_btn.add_css_class("flat");
@@ -1685,7 +1694,7 @@ impl FolderplayWindow {
                                 let v: Vec<&str> = cur.iter().map(|s| s.as_str()).collect();
                                 s.set_strv("music-folders", v).ok();
                                 let row = adw::ActionRow::builder()
-                                    .title(&Path::new(&path_str).file_name().unwrap_or_default().to_string_lossy().to_string())
+                                    .title(Path::new(&path_str).file_name().unwrap_or_default().to_string_lossy().to_string())
                                     .build();
                                 row.add_prefix(&gtk::Image::from_icon_name("fp-folder-music-symbolic"));
                                 gr.add(&row);
@@ -2022,7 +2031,7 @@ impl FolderplayWindow {
             drop(items);
             if let Some(pos) = pos {
                 let pos = pos as u32;
-                let is_grid = self.grid_toggle.borrow().as_ref().map_or(false, |t| t.is_active());
+                let is_grid = self.grid_toggle.borrow().as_ref().is_some_and(|t| t.is_active());
                 if is_grid {
                     if let Some(gv) = self.grid_view.borrow().as_ref() {
                         gv.scroll_to(pos, gtk::ListScrollFlags::FOCUS, None);
@@ -2239,12 +2248,11 @@ impl FolderplayWindow {
 
     fn on_position(&self, position: f64, duration: f64) {
         let now = glib::monotonic_time();
-        if (now - self.last_seek_time.get()) > 800000 {
-            if duration > 0.0 {
+        if (now - self.last_seek_time.get()) > 800000
+            && duration > 0.0 {
                 self.seek_scale.borrow().as_ref().unwrap().set_range(0.0, duration);
                 self.seek_scale.borrow().as_ref().unwrap().set_value(position);
             }
-        }
         self.pos_label.borrow().as_ref().unwrap().set_label(&format_time(position));
         self.dur_label.borrow().as_ref().unwrap().set_label(&format_time(duration));
     }
@@ -2407,7 +2415,7 @@ impl FolderplayWindow {
         if tags.is_empty() { return; }
 
         let dlg = adw::Dialog::builder()
-            .title(&gettext("Song Info"))
+            .title(gettext("Song Info"))
             .content_width(380)
             .content_height(420)
             .build();
@@ -2434,7 +2442,7 @@ impl FolderplayWindow {
             .margin_end(16)
             .build();
 
-        let tag_group = adw::PreferencesGroup::builder().title(&gettext("Tags")).build();
+        let tag_group = adw::PreferencesGroup::builder().title(gettext("Tags")).build();
         let fields = [
             (gettext("Title"), tags.get("title").cloned().unwrap_or_default()),
             (gettext("Artist"), tags.get("artist").cloned().unwrap_or_default()),
@@ -2450,13 +2458,13 @@ impl FolderplayWindow {
         }
         content.append(&tag_group);
 
-        let tech_group = adw::PreferencesGroup::builder().title(&gettext("Audio")).build();
+        let tech_group = adw::PreferencesGroup::builder().title(gettext("Audio")).build();
         let dur: f64 = tags.get("duration").and_then(|d| d.parse().ok()).unwrap_or(0.0);
         let sr: i32 = tags.get("sample_rate").and_then(|s| s.parse().ok()).unwrap_or(0);
         let bits: i32 = tags.get("bits_per_sample").and_then(|s| s.parse().ok()).unwrap_or(0);
         let ch: i32 = tags.get("channels").and_then(|s| s.parse().ok()).unwrap_or(0);
         let tech_fields = [
-            ("Format".to_string(), tags.get("format").cloned().unwrap_or_default()),
+            (gettext("Format"), tags.get("format").cloned().unwrap_or_default()),
             (gettext("Duration"), if dur > 0.0 { format_time(dur) } else { "\u{2014}".to_string() }),
             (gettext("Sample Rate"), if sr > 0 { format!("{sr} Hz") } else { "\u{2014}".to_string() }),
             (gettext("Bit Depth"), if bits > 0 { format!("{bits}-bit") } else { "\u{2014}".to_string() }),
@@ -2469,15 +2477,15 @@ impl FolderplayWindow {
         content.append(&tech_group);
 
         if let Some(path) = tags.get("path") {
-            let file_group = adw::PreferencesGroup::builder().title(&gettext("File")).build();
+            let file_group = adw::PreferencesGroup::builder().title(gettext("File")).build();
             let row = adw::ActionRow::builder()
-                .title(&gettext("Filename"))
-                .subtitle(&Path::new(path).file_name().unwrap_or_default().to_string_lossy().to_string())
+                .title(gettext("Filename"))
+                .subtitle(Path::new(path).file_name().unwrap_or_default().to_string_lossy().to_string())
                 .build();
             file_group.add(&row);
             let row2 = adw::ActionRow::builder()
-                .title(&gettext("Location"))
-                .subtitle(&Path::new(path).parent().unwrap_or(Path::new("")).to_string_lossy().to_string())
+                .title(gettext("Location"))
+                .subtitle(Path::new(path).parent().unwrap_or(Path::new("")).to_string_lossy().to_string())
                 .subtitle_lines(2)
                 .build();
             file_group.add(&row2);
@@ -2488,7 +2496,7 @@ impl FolderplayWindow {
                 } else {
                     format!("{} KB", size / 1024)
                 };
-                let row3 = adw::ActionRow::builder().title(&gettext("Size")).subtitle(&size_str).build();
+                let row3 = adw::ActionRow::builder().title(gettext("Size")).subtitle(&size_str).build();
                 file_group.add(&row3);
             }
             content.append(&file_group);
@@ -2578,9 +2586,9 @@ impl FolderplayWindow {
             w >= 770 && !pl.is_empty() && idx >= 0 && (idx as usize) < pl.len(),
         );
         drop(pl);
-        if w < 900 && self.browse_visible.get() {
-            self.on_toggle_browse(true);
-        } else if w >= 900 && !self.browse_visible.get() && !self.browse_manual_closed.get() {
+        if (w < 900 && self.browse_visible.get())
+            || (w >= 900 && !self.browse_visible.get() && !self.browse_manual_closed.get())
+        {
             self.on_toggle_browse(true);
         }
         self.auto_hide_busy.set(false);
@@ -2909,7 +2917,7 @@ fn discover_cover_recursive(db: &Arc<LibraryDB>, path: &str, depth: u32) -> Opti
     let mut subdirs = Vec::new();
     if let Ok(rd) = std::fs::read_dir(path) {
         let mut entries: Vec<_> = rd.filter_map(|e| e.ok()).collect();
-        entries.sort_by(|a, b| a.file_name().cmp(&b.file_name()));
+        entries.sort_by_key(|a| a.file_name());
         for e in &entries {
             let ft = match e.file_type() { Ok(t) => t, Err(_) => continue };
             if e.file_name().to_string_lossy().starts_with('.') { continue; }
@@ -2976,7 +2984,6 @@ fn extract_palette(texture: &gdk::Texture, n_colors: usize) -> Option<Vec<(u8, u
 
     let step_x = (w / 64).max(1);
     let step_y = (h / 64).max(1);
-    let stride = stride as usize;
 
     let mut pixels = Vec::new();
     let mut y = 0;

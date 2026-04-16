@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/org/gnome/folderplay">
+  <gresource prefix="/io/github/juancarlosbernal/FolderPlay">
     <file preprocess="xml-stripblanks">window.ui</file>
     <file preprocess="xml-stripblanks">shortcuts-dialog.ui</file>
     <file>style.css</file>
   </gresource>
-  <gresource prefix="/org/gnome/folderplay/icons/scalable/apps">
-    <file alias="org.gnome.folderplay.svg">../data/icons/hicolor/scalable/apps/org.gnome.folderplay.svg</file>
-    <file alias="org.gnome.folderplay-symbolic.svg">../data/icons/hicolor/symbolic/apps/org.gnome.folderplay-symbolic.svg</file>
+  <gresource prefix="/io/github/juancarlosbernal/FolderPlay/icons/scalable/apps">
+    <file alias="io.github.juancarlosbernal.FolderPlay.svg">../data/icons/hicolor/scalable/apps/io.github.juancarlosbernal.FolderPlay.svg</file>
+    <file alias="io.github.juancarlosbernal.FolderPlay-symbolic.svg">../data/icons/hicolor/symbolic/apps/io.github.juancarlosbernal.FolderPlay-symbolic.svg</file>
   </gresource>
-  <gresource prefix="/org/gnome/folderplay/icons/scalable/actions">
+  <gresource prefix="/io/github/juancarlosbernal/FolderPlay/icons/scalable/actions">
     <file alias="fp-playlist-consecutive-symbolic.svg">../data/icons/hicolor/scalable/actions/playlist-consecutive-symbolic.svg</file>
     <file alias="fp-playlist-repeat-symbolic.svg">../data/icons/hicolor/scalable/actions/playlist-repeat-symbolic.svg</file>
     <file alias="fp-playlist-repeat-song-symbolic.svg">../data/icons/hicolor/scalable/actions/playlist-repeat-song-symbolic.svg</file>

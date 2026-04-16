@@ -21,7 +21,10 @@ fn main() -> glib::ExitCode {
     textdomain("folderplay").ok();
 
     // GStreamer
-    gst::init().expect("Failed to initialise GStreamer");
+    if let Err(e) = gst::init() {
+        eprintln!("Failed to initialise GStreamer: {e}");
+        return glib::ExitCode::FAILURE;
+    }
 
     // GResources
     gio::resources_register_include!("folderplay.gresource")

@@ -1,5 +1,5 @@
 {
-    "id" : "org.gnome.folderplay",
+    "id" : "io.github.juancarlosbernal.FolderPlay",
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "49",
     "sdk" : "org.gnome.Sdk",
@@ -9,6 +9,8 @@
     "command" : "folderplay",
     "finish-args" : [
         "--socket=wayland",
+        "--socket=fallback-x11",
+        "--share=ipc",
         "--socket=pulseaudio",
         "--filesystem=xdg-run/pipewire-0",
         "--filesystem=xdg-config/pipewire/pipewire.conf.d:create",

@@ -37,9 +37,10 @@ mod imp {
     impl ApplicationImpl for FolderplayApplication {
         fn startup(&self) {
             self.parent_startup();
-            let display = gdk::Display::default().unwrap();
-            let icon_theme = gtk::IconTheme::for_display(&display);
-            icon_theme.add_resource_path("/org/gnome/folderplay/icons");
+            if let Some(display) = gdk::Display::default() {
+                let icon_theme = gtk::IconTheme::for_display(&display);
+                icon_theme.add_resource_path("/io/github/juancarlosbernal/FolderPlay/icons");
+            }
         }
 
         fn activate(&self) {
@@ -91,7 +92,7 @@ impl FolderplayApplication {
         glib::Object::builder()
             .property("application-id", config::APP_ID)
             .property("flags", gio::ApplicationFlags::HANDLES_OPEN)
-            .property("resource-base-path", "/org/gnome/folderplay")
+            .property("resource-base-path", "/io/github/juancarlosbernal/FolderPlay")
             .build()
     }
 
@@ -120,10 +121,10 @@ impl FolderplayApplication {
     fn on_about(&self) {
         let about = adw::AboutDialog::builder()
             .application_name("FolderPlay")
-            .application_icon(config::APP_ID)
+            .application_icon("io.github.juancarlosbernal.FolderPlay")
             .developer_name("Juan Carlos Bernal")
             .version(config::VERSION)
-            .translator_credits(&gettext("translator-credits"))
+            .translator_credits(gettext("translator-credits"))
             .developers(["Juan Carlos Bernal"])
             .copyright("© 2026 Juan Carlos Bernal")
             .comments(&{
@@ -145,7 +146,7 @@ impl FolderplayApplication {
 
     fn on_shortcuts(&self) {
         let builder =
-            gtk::Builder::from_resource("/org/gnome/folderplay/shortcuts-dialog.ui");
+            gtk::Builder::from_resource("/io/github/juancarlosbernal/FolderPlay/shortcuts-dialog.ui");
         let dialog: gtk::ShortcutsWindow = builder.object("shortcuts_dialog").unwrap();
         if let Some(win) = self.active_window() {
             dialog.set_transient_for(Some(&win));

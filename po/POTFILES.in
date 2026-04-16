@@ -1,8 +1,8 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
-data/org.gnome.folderplay.desktop.in
-data/org.gnome.folderplay.metainfo.xml.in
-data/org.gnome.folderplay.gschema.xml
+data/io.github.juancarlosbernal.FolderPlay.desktop.in
+data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+data/io.github.juancarlosbernal.FolderPlay.gschema.xml
 src/application.rs
 src/preferences.rs
 src/window/imp.rs

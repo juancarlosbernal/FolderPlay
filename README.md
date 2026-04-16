@@ -1,4 +1,4 @@
-<p align="center"><img src="data/icons/hicolor/scalable/apps/org.gnome.folderplay.svg">
+<p align="center"><img src="data/icons/hicolor/scalable/apps/io.github.juancarlosbernal.FolderPlay.svg">
 <h1 align="center">FolderPlay</h1>
 
 <p align="center"><a href='https://github.com/juancarlosbernal/FolderPlay'><img width='190' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/></a>  </p>

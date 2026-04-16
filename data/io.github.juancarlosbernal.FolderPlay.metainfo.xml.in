@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>org.gnome.folderplay</id>
+  <id>io.github.juancarlosbernal.FolderPlay</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
 
@@ -29,15 +29,15 @@
   </developer>
 
   <url type="homepage">https://github.com/juancarlosbernal/FolderPlay</url>
-    <url type="donation">https://ko-fi.com/G2G31XWNFB</url>
   <url type="vcs-browser">https://github.com/juancarlosbernal/FolderPlay</url>
   <url type="bugtracker">https://github.com/juancarlosbernal/FolderPlay/issues</url>
+  <url type="donation">https://ko-fi.com/G2G31XWNFB</url>
 
 
   <translation type="gettext">folderplay</translation>
   <!-- All graphical applications having a desktop file must have this tag in the MetaInfo.
      If this is present, appstreamcli compose will pull icons, keywords and categories from the desktop file. -->
-  <launchable type="desktop-id">org.gnome.folderplay.desktop</launchable>
+  <launchable type="desktop-id">io.github.juancarlosbernal.FolderPlay.desktop</launchable>
   <!-- Use the OARS website (https://hughsie.github.io/oars/generate.html) to generate these and make sure to use oars-1.1 -->
   <content_rating type="oars-1.1" />
 
@@ -48,8 +48,6 @@
   </branding>
 
   <screenshots>
-    <!-- FIXME: Host the screenshots (e.g. on GitHub) and replace the URLs -->
-    <!-- e.g. https://raw.githubusercontent.com/YOUR_USER/FolderPlay/HEAD/screenshots/1.png -->
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/juancarlosbernal/FolderPlay/HEAD/screenshots/1.png</image>
       <caption>Browsing a Hi-Res FLAC folder in list view</caption>
@@ -78,7 +76,7 @@
   </requires>
 
   <releases>
-    <release version="1.0" date="2026-04-14">
+    <release version="1.0.0" date="2026-04-14">
       <description>
         <p>First Release!</p>
       </description>
