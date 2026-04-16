@@ -2,11 +2,14 @@
 <h1 align="center">FolderPlay</h1>
 
 <p align="center"><a href='https://github.com/juancarlosbernal/FolderPlay'><img width='190' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/></a></p>
-<p align="center">
 
-![Static Badge](https://img.shields.io/badge/Licence-GPLv3-blue) ![Static Badge](https://img.shields.io/badge/Made_with-Rust-orange)
+<div align="center">
 
-</p>
+![License](https://img.shields.io/badge/Licence-GPLv3-blue)
+![Made with Rust](https://img.shields.io/badge/Made_with-Rust-orange)
+
+</div>
+
 
 ![](screenshots/1.png)
 
