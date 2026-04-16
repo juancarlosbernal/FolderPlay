@@ -2112,7 +2112,11 @@ impl FolderplayWindow {
 
     // ── Playback ───────────────────────────────────────────────────
     fn play_file(&self, path: &str) {
-        let uri = glib::filename_to_uri(path, None).unwrap().to_string();
+        let Ok(uri) = glib::filename_to_uri(path, None) else {
+            eprintln!("play_file: invalid path: {path}");
+            return;
+        };
+        let uri = uri.to_string();
         self.player.borrow().as_ref().unwrap().play_uri(&uri);
 
         let old_path = self.playing_path.borrow().clone();

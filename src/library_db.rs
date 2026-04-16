@@ -248,7 +248,7 @@ impl LibraryDB {
         );
         if let Some(artist) = exclude_artist {
             sql.push_str(" AND LOWER(COALESCE(artist,'')) NOT LIKE ? ESCAPE '\\'");
-            let escaped = artist.to_lowercase().replace('%', "\\%").replace('_', "\\_");
+            let escaped = artist.to_lowercase().replace('\\', "\\\\").replace('%', "\\%").replace('_', "\\_");
             root_params.push(format!("%{escaped}%"));
         }
         sql.push_str(" ORDER BY path COLLATE NOCASE");
@@ -266,7 +266,7 @@ impl LibraryDB {
         for p in root_paths {
             parts.push("folder = ? OR folder LIKE ? ESCAPE '\\'".to_string());
             params.push(p.clone());
-            let escaped = p.trim_end_matches('/').replace('%', "\\%").replace('_', "\\_");
+            let escaped = p.trim_end_matches('/').replace('\\', "\\\\").replace('%', "\\%").replace('_', "\\_");
             params.push(format!("{escaped}/%"));
         }
         (parts.join(" OR "), params)
@@ -567,7 +567,7 @@ impl LibraryDB {
         }
         let conn = self.conn.lock().unwrap();
         let (root_cond, root_params) = Self::root_conditions(root_paths);
-        let sql = format!("SELECT COUNT(*) FROM songs WHERE {root_cond}");
+        let sql = format!("SELECT COUNT(*) FROM songs WHERE ({root_cond})");
         let mut stmt = conn.prepare(&sql).unwrap();
         let p: Vec<&dyn rusqlite::ToSql> = root_params.iter().map(|v| v as &dyn rusqlite::ToSql).collect();
         stmt.query_row(p.as_slice(), |r| r.get(0)).unwrap_or(0)
@@ -673,7 +673,7 @@ impl LibraryDB {
 
         let mut word_conds = Vec::new();
         for w in words {
-            let escaped = w.replace('%', "\\%").replace('_', "\\_");
+            let escaped = w.replace('\\', "\\\\").replace('%', "\\%").replace('_', "\\_");
             let pattern = format!("%{escaped}%");
             word_conds.push("(title LIKE ? ESCAPE '\\' OR artist LIKE ? ESCAPE '\\' OR album LIKE ? ESCAPE '\\' OR name LIKE ? ESCAPE '\\')".to_string());
             for _ in 0..4 {
