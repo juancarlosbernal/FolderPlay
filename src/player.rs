@@ -400,12 +400,6 @@ fn make_hifi_sink() -> Option<gst::Element> {
         .name("audio-sink")
         .build()
         .ok()
-        .or_else(|| {
-            gst::ElementFactory::make("alsasink")
-                .name("audio-sink")
-                .build()
-                .ok()
-        })
 }
 
 fn set_pipewire_rates(rates: &str) {
