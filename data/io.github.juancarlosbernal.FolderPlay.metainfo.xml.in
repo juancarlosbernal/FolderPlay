@@ -70,6 +70,12 @@
   </requires>
 
   <releases>
+   <release version="1.0.1" date="2026-04-17">
+      <description>
+        <p>Fix: authorize folder access via portal.</p>
+        <p>Bug fixes</p>
+      </description>
+    </release>
     <release version="1.0.0" date="2026-04-14">
       <description>
         <p>First Release!</p>
