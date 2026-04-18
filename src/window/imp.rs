@@ -236,7 +236,7 @@ impl ObjectImpl for FolderplayWindow {
             .strv("music-folders")
             .iter()
             .map(|s| s.to_string())
-            .filter(|f| Path::new(f).is_dir())
+            .filter(|f| !f.is_empty())
             .collect();
 
         // Migrate legacy
@@ -251,9 +251,25 @@ impl ObjectImpl for FolderplayWindow {
         }
 
         if !folders.is_empty() {
-            let v: Vec<&str> = folders.iter().map(|s| s.as_str()).collect();
-            settings.set_strv("music-folders", v).ok();
-            self.load_all_folders();
+            // Check for folders that are no longer accessible (e.g. after
+            // reboot inside Flatpak where portal grants expired).
+            let inaccessible: Vec<String> = folders
+                .iter()
+                .filter(|f| !Path::new(f).is_dir())
+                .cloned()
+                .collect();
+            if inaccessible.is_empty() {
+                self.load_all_folders();
+            } else {
+                // Re-authorize via portal: open FileDialog for each
+                // inaccessible folder so the sandbox regains access.
+                let obj_weak = self.obj().downgrade();
+                glib::idle_add_local_once(move || {
+                    if let Some(obj) = obj_weak.upgrade() {
+                        obj.imp().reauthorize_folders(inaccessible);
+                    }
+                });
+            }
         }
     }
 }
@@ -1495,13 +1511,13 @@ impl FolderplayWindow {
                 self.back_btn.borrow().as_ref().unwrap().set_visible(false);
                 let settings = gio::Settings::new(config::APP_ID);
                 let folders: Vec<String> = settings.strv("music-folders").iter()
-                    .map(|s| s.to_string()).filter(|f| Path::new(f).is_dir()).collect();
+                    .map(|s| s.to_string()).filter(|f| !f.is_empty()).collect();
                 self.load_virtual_root(&folders);
             }
         } else {
             let settings = gio::Settings::new(config::APP_ID);
             let folders: Vec<String> = settings.strv("music-folders").iter()
-                .map(|s| s.to_string()).filter(|f| Path::new(f).is_dir()).collect();
+                .map(|s| s.to_string()).filter(|f| !f.is_empty()).collect();
             if folders.len() > 1 {
                 *self.current_folder.borrow_mut() = None;
                 self.folder_label.borrow().as_ref().unwrap().set_label(&gettext("Folders"));
@@ -1546,6 +1562,49 @@ impl FolderplayWindow {
                         }
                     }
                 }
+            }
+        });
+    }
+
+    /// Re-authorize access to folders whose portal grants expired (e.g. after
+    /// reboot inside Flatpak).  Opens a FileDialog for each inaccessible folder
+    /// so the portal re-grants sandbox access, then reloads the library.
+    fn reauthorize_folders(&self, inaccessible: Vec<String>) {
+        if inaccessible.is_empty() {
+            self.load_all_folders();
+            return;
+        }
+
+        let folder = inaccessible[0].clone();
+        let remaining: Vec<String> = inaccessible[1..].to_vec();
+
+        let dialog = gtk::FileDialog::new();
+        dialog.set_title(&gettext("Re-authorize folder access"));
+        if let Some(parent) = Path::new(&folder).parent() {
+            dialog.set_initial_folder(Some(&gio::File::for_path(parent)));
+        }
+
+        let obj_weak = self.obj().downgrade();
+        dialog.select_folder(Some(&*self.obj()), None::<&gio::Cancellable>, move |result| {
+            if let Ok(file) = result {
+                if let Some(path) = file.path() {
+                    let path_str = path.to_string_lossy().to_string();
+                    let display = display_path(&path_str);
+                    save_display_name(&path_str, &display);
+                    // If the user selected a different folder, add it.
+                    let settings = gio::Settings::new(config::APP_ID);
+                    let mut folders: Vec<String> = settings.strv("music-folders").iter()
+                        .map(|s| s.to_string()).collect();
+                    if !folders.contains(&path_str) {
+                        folders.push(path_str);
+                        let v: Vec<&str> = folders.iter().map(|s| s.as_str()).collect();
+                        settings.set_strv("music-folders", v).ok();
+                    }
+                }
+            }
+            // Continue with next folder (even if user cancelled this one).
+            if let Some(obj) = obj_weak.upgrade() {
+                obj.imp().reauthorize_folders(remaining);
             }
         });
     }
@@ -1599,7 +1658,7 @@ impl FolderplayWindow {
         } else {
             let settings = gio::Settings::new(config::APP_ID);
             let folders: Vec<String> = settings.strv("music-folders").iter()
-                .map(|s| s.to_string()).filter(|f| Path::new(f).is_dir()).collect();
+                .map(|s| s.to_string()).filter(|f| !f.is_empty()).collect();
             if folders.len() > 1 {
                 self.load_virtual_root(&folders);
             } else if folders.len() == 1 {
@@ -1716,7 +1775,7 @@ impl FolderplayWindow {
             if let Some(o) = obj_weak.upgrade() {
                 let settings = gio::Settings::new(config::APP_ID);
                 let current: Vec<String> = settings.strv("music-folders").iter()
-                    .map(|s| s.to_string()).filter(|f| Path::new(f).is_dir()).collect();
+                    .map(|s| s.to_string()).filter(|f| !f.is_empty()).collect();
                 let has_new = current.iter().any(|f| !initial_folders.contains(f));
                 if has_new && !current.is_empty() {
                     o.imp().start_scan_all_folders(current);
@@ -1746,7 +1805,7 @@ impl FolderplayWindow {
     fn return_to_root(&self) {
         let settings = gio::Settings::new(config::APP_ID);
         let folders: Vec<String> = settings.strv("music-folders").iter()
-            .map(|s| s.to_string()).filter(|f| Path::new(f).is_dir()).collect();
+            .map(|s| s.to_string()).filter(|f| !f.is_empty()).collect();
         if folders.is_empty() {
             self.reset_library();
             return;
@@ -1772,7 +1831,7 @@ impl FolderplayWindow {
     fn load_all_folders(&self) {
         let settings = gio::Settings::new(config::APP_ID);
         let folders: Vec<String> = settings.strv("music-folders").iter()
-            .map(|s| s.to_string()).filter(|f| Path::new(f).is_dir()).collect();
+            .map(|s| s.to_string()).filter(|f| !f.is_empty()).collect();
         if folders.is_empty() {
             self.reset_library();
             return;
@@ -2084,7 +2143,7 @@ impl FolderplayWindow {
         let words: Vec<String> = query.split_whitespace().map(|s| s.to_string()).collect();
         let settings = gio::Settings::new(config::APP_ID);
         let roots: Vec<String> = settings.strv("music-folders").iter()
-            .map(|s| s.to_string()).filter(|f| Path::new(f).is_dir()).collect();
+            .map(|s| s.to_string()).filter(|f| !f.is_empty()).collect();
         let hide_bb = settings.boolean("anti-bad-bunny");
 
         let db = self.db.borrow().as_ref().unwrap().clone();
@@ -2583,7 +2642,7 @@ impl FolderplayWindow {
 
         let settings = gio::Settings::new(config::APP_ID);
         let folders: Vec<String> = settings.strv("music-folders").iter()
-            .map(|s| s.to_string()).filter(|f| Path::new(f).is_dir()).collect();
+            .map(|s| s.to_string()).filter(|f| !f.is_empty()).collect();
 
         if folders.len() > 1 {
             self.nav_stack.borrow_mut().push((None, gettext("Folders")));
