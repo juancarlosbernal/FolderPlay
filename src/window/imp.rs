@@ -60,39 +60,27 @@ fn display_path(path: &str) -> String {
     path.to_string()
 }
 
-fn load_display_names() -> HashMap<String, String> {
-    let settings = gio::Settings::new(config::APP_ID);
-    let pairs = settings.strv("folder-display-names");
-    let mut map = HashMap::new();
-    let mut i = 0;
-    while i + 1 < pairs.len() {
-        let internal = pairs[i].to_string();
-        let display = pairs[i + 1].to_string();
-        if !display.starts_with("/run/user/") {
-            map.insert(internal, display);
-        }
-        i += 2;
-    }
-    map
+/// Return the XDG Music directory (e.g. /home/user/Music).
+fn xdg_music_dir() -> Option<String> {
+    glib::user_special_dir(glib::enums::UserDirectory::Music)
+        .map(|p| p.to_string_lossy().to_string())
 }
 
-fn save_display_name(internal: &str, display: &str) {
-    let settings = gio::Settings::new(config::APP_ID);
-    let mut pairs = Vec::new();
-    // Read existing
-    let existing = settings.strv("folder-display-names");
-    let mut i = 0;
-    while i + 1 < existing.len() {
-        if existing[i].as_str() != internal {
-            pairs.push(existing[i].to_string());
-            pairs.push(existing[i + 1].to_string());
-        }
-        i += 2;
-    }
-    pairs.push(internal.to_string());
-    pairs.push(display.to_string());
-    let v: Vec<&str> = pairs.iter().map(|s| s.as_str()).collect();
-    settings.set_strv("folder-display-names", v).ok();
+/// List mount-points directly under /mnt that are readable directories.
+fn list_mnt_entries() -> Vec<String> {
+    let mnt = Path::new("/mnt");
+    if !mnt.is_dir() { return vec![]; }
+    let mut entries: Vec<String> = std::fs::read_dir(mnt)
+        .into_iter()
+        .flatten()
+        .filter_map(|e| {
+            let e = e.ok()?;
+            let p = e.path();
+            if p.is_dir() { Some(p.to_string_lossy().to_string()) } else { None }
+        })
+        .collect();
+    entries.sort();
+    entries
 }
 
 fn is_bad_bunny(artist: &str) -> bool {
@@ -142,7 +130,6 @@ pub struct FolderplayWindow {
     pub pending_scroll_path: RefCell<Option<String>>,
     pub playing_path: RefCell<Option<String>>,
     pub external_file: Cell<bool>,
-    pub display_names: RefCell<HashMap<String, String>>,
     pub filter_model: RefCell<Option<gtk::FilterListModel>>,
 
     // Widget refs (set in build_ui)
@@ -229,8 +216,6 @@ impl ObjectImpl for FolderplayWindow {
         self.setup_actions();
         self.connect_signals();
 
-        *self.display_names.borrow_mut() = load_display_names();
-
         let settings = gio::Settings::new(config::APP_ID);
         let mut folders: Vec<String> = settings
             .strv("music-folders")
@@ -250,26 +235,24 @@ impl ObjectImpl for FolderplayWindow {
             settings.set_string("music-folder", "").ok();
         }
 
-        if !folders.is_empty() {
-            // Check for folders that are no longer accessible (e.g. after
-            // reboot inside Flatpak where portal grants expired).
-            let inaccessible: Vec<String> = folders
-                .iter()
-                .filter(|f| !Path::new(f).is_dir())
-                .cloned()
-                .collect();
-            if inaccessible.is_empty() {
-                self.load_all_folders();
-            } else {
-                // Re-authorize via portal: open FileDialog for each
-                // inaccessible folder so the sandbox regains access.
-                let obj_weak = self.obj().downgrade();
-                glib::idle_add_local_once(move || {
-                    if let Some(obj) = obj_weak.upgrade() {
-                        obj.imp().reauthorize_folders(inaccessible);
-                    }
-                });
+        // Auto-add XDG Music if enabled in settings
+        if settings.boolean("xdg-music-enabled") {
+            if let Some(music_dir) = xdg_music_dir() {
+                if Path::new(&music_dir).is_dir() && !folders.contains(&music_dir) {
+                    folders.push(music_dir.clone());
+                    let v: Vec<&str> = folders.iter().map(|s| s.as_str()).collect();
+                    settings.set_strv("music-folders", v).ok();
+                }
             }
+        }
+
+        // Remove folders that no longer exist on disk
+        let accessible: Vec<String> = folders.into_iter()
+            .filter(|f| Path::new(f).is_dir())
+            .collect();
+
+        if !accessible.is_empty() {
+            self.load_all_folders();
         }
     }
 }
@@ -1536,77 +1519,7 @@ impl FolderplayWindow {
 
     // ── Folder operations ──────────────────────────────────────────
     fn on_open_folder(&self) {
-        let dialog = gtk::FileDialog::new();
-        dialog.set_title(&gettext("Select Music Folder"));
-        let obj_weak = self.obj().downgrade();
-        dialog.select_folder(Some(&*self.obj()), None::<&gio::Cancellable>, move |result| {
-            if let Ok(file) = result {
-                if let Some(path) = file.path() {
-                    let path_str = path.to_string_lossy().to_string();
-                    let display = display_path(&path_str);
-                    save_display_name(&path_str, &display);
-                    let settings = gio::Settings::new(config::APP_ID);
-                    let mut folders: Vec<String> = settings.strv("music-folders").iter()
-                        .map(|s| s.to_string()).collect();
-                    let is_new = !folders.contains(&path_str);
-                    if is_new {
-                        folders.push(path_str.clone());
-                        let v: Vec<&str> = folders.iter().map(|s| s.as_str()).collect();
-                        settings.set_strv("music-folders", v).ok();
-                    }
-                    if let Some(obj) = obj_weak.upgrade() {
-                        if is_new {
-                            obj.imp().start_scan_new_folder(path_str);
-                        } else {
-                            obj.imp().load_all_folders();
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    /// Re-authorize access to folders whose portal grants expired (e.g. after
-    /// reboot inside Flatpak).  Opens a FileDialog for each inaccessible folder
-    /// so the portal re-grants sandbox access, then reloads the library.
-    fn reauthorize_folders(&self, inaccessible: Vec<String>) {
-        if inaccessible.is_empty() {
-            self.load_all_folders();
-            return;
-        }
-
-        let folder = inaccessible[0].clone();
-        let remaining: Vec<String> = inaccessible[1..].to_vec();
-
-        let dialog = gtk::FileDialog::new();
-        dialog.set_title(&gettext("Re-authorize folder access"));
-        if let Some(parent) = Path::new(&folder).parent() {
-            dialog.set_initial_folder(Some(&gio::File::for_path(parent)));
-        }
-
-        let obj_weak = self.obj().downgrade();
-        dialog.select_folder(Some(&*self.obj()), None::<&gio::Cancellable>, move |result| {
-            if let Ok(file) = result {
-                if let Some(path) = file.path() {
-                    let path_str = path.to_string_lossy().to_string();
-                    let display = display_path(&path_str);
-                    save_display_name(&path_str, &display);
-                    // If the user selected a different folder, add it.
-                    let settings = gio::Settings::new(config::APP_ID);
-                    let mut folders: Vec<String> = settings.strv("music-folders").iter()
-                        .map(|s| s.to_string()).collect();
-                    if !folders.contains(&path_str) {
-                        folders.push(path_str);
-                        let v: Vec<&str> = folders.iter().map(|s| s.as_str()).collect();
-                        settings.set_strv("music-folders", v).ok();
-                    }
-                }
-            }
-            // Continue with next folder (even if user cancelled this one).
-            if let Some(obj) = obj_weak.upgrade() {
-                obj.imp().reauthorize_folders(remaining);
-            }
-        });
+        self.on_manage_folders();
     }
 
     fn on_anti_bad_bunny(&self) {
@@ -1670,8 +1583,8 @@ impl FolderplayWindow {
     fn on_manage_folders(&self) {
         let dlg = adw::Dialog::builder()
             .title(gettext("Manage Folders"))
-            .content_width(460)
-            .content_height(400)
+            .content_width(500)
+            .content_height(600)
             .build();
         let toolbar_view = adw::ToolbarView::new();
         toolbar_view.add_top_bar(&adw::HeaderBar::new());
@@ -1680,27 +1593,49 @@ impl FolderplayWindow {
         scroll.set_policy(gtk::PolicyType::Never, gtk::PolicyType::Automatic);
 
         let clamp = adw::Clamp::builder()
-            .maximum_size(400)
+            .maximum_size(460)
             .margin_top(12).margin_bottom(12).margin_start(12).margin_end(12)
             .build();
 
-        let content = gtk::Box::builder()
-            .orientation(gtk::Orientation::Vertical)
-            .spacing(12)
-            .build();
-
-        let group = adw::PreferencesGroup::builder()
-            .title(gettext("Music Folders"))
-            .description(gettext("Add local folders to build your music library"))
-            .build();
+        let page = adw::PreferencesPage::new();
 
         let settings = gio::Settings::new(config::APP_ID);
-        let initial_folders: Vec<String> = settings.strv("music-folders").iter().map(|s| s.to_string()).collect();
+        let initial_folders: Vec<String> = settings.strv("music-folders").iter()
+            .map(|s| s.to_string()).filter(|f| !f.is_empty()).collect();
 
-        let group_ref = group.clone();
+        // Shared map: path → add button (so remove can restore it)
+        let add_btn_map: std::rc::Rc<RefCell<HashMap<String, gtk::Button>>> =
+            std::rc::Rc::new(RefCell::new(HashMap::new()));
+
+        // ── Section 1: XDG Music toggle ────────────────────────────
+        let music_group = adw::PreferencesGroup::builder()
+            .title(gettext("Music Directory"))
+            .build();
+
+        let music_dir_label = xdg_music_dir().unwrap_or_else(|| String::from("~/Music"));
+        let music_row = adw::SwitchRow::builder()
+            .title(display_path(&music_dir_label))
+            .subtitle(gettext("Include your personal music directory"))
+            .build();
+        music_row.add_prefix(&gtk::Image::from_icon_name("fp-folder-music-symbolic"));
+        music_row.set_active(settings.boolean("xdg-music-enabled"));
+        music_group.add(&music_row);
+        page.add(&music_group);
+
+        // ── Section 2: Current folders (with remove) ───────────────
+        let current_group = adw::PreferencesGroup::builder()
+            .title(gettext("Selected Folders"))
+            .description(gettext("Folders currently in your library"))
+            .build();
+
+        // Skip XDG Music dir from the manual list if present
+        let xdg_dir = xdg_music_dir();
         for f in &initial_folders {
+            if let Some(ref xd) = xdg_dir {
+                if f == xd { continue; }
+            }
             let row = adw::ActionRow::builder()
-                .title(Path::new(f).file_name().unwrap_or_default().to_string_lossy().to_string())
+                .title(display_path(f))
                 .build();
             row.add_prefix(&gtk::Image::from_icon_name("fp-folder-music-symbolic"));
             let remove_btn = gtk::Button::builder()
@@ -1711,64 +1646,92 @@ impl FolderplayWindow {
             remove_btn.add_css_class("flat");
             remove_btn.add_css_class("circular");
             let path = f.clone();
-            let group_ref2 = group_ref.clone();
+            let current_group_ref = current_group.clone();
             let row_ref = row.clone();
+            let map_ref = add_btn_map.clone();
             remove_btn.connect_clicked(move |_| {
-                group_ref2.remove(&row_ref);
+                current_group_ref.remove(&row_ref);
                 let s = gio::Settings::new(config::APP_ID);
                 let mut cur: Vec<String> = s.strv("music-folders").iter().map(|s| s.to_string()).collect();
                 cur.retain(|p| p != &path);
                 let v: Vec<&str> = cur.iter().map(|s| s.as_str()).collect();
                 s.set_strv("music-folders", v).ok();
+                // Restore the add button in the /mnt tree if present
+                if let Some(btn) = map_ref.borrow().get(&path) {
+                    btn.set_sensitive(true);
+                    btn.set_icon_name("fp-plus-circle-outline-symbolic");
+                }
             });
             row.add_suffix(&remove_btn);
-            group.add(&row);
+            current_group.add(&row);
         }
-        content.append(&group);
+        page.add(&current_group);
 
-        let add_btn = gtk::Button::builder().halign(gtk::Align::Center).build();
-        add_btn.add_css_class("pill");
-        add_btn.add_css_class("suggested-action");
-        let add_box = gtk::Box::builder().spacing(8).halign(gtk::Align::Center).build();
-        add_box.append(&gtk::Image::from_icon_name("fp-plus-circle-outline-symbolic"));
-        add_box.append(&gtk::Label::new(Some(&gettext("Add Folder"))));
-        add_btn.set_child(Some(&add_box));
+        // ── Section 3: /mnt disk browser ───────────────────────────
+        let mnt_entries = list_mnt_entries();
+        if !mnt_entries.is_empty() {
+            let mnt_group = adw::PreferencesGroup::builder()
+                .title(gettext("External Disks"))
+                .description(gettext("Browse disks mounted in /mnt\n(To add a network disk or NAS, you must mount it in /mnt/ and it will appear in the options below)"))
+                .build();
 
-        let obj_weak = self.obj().downgrade();
-        let group_ref3 = group.clone();
-        add_btn.connect_clicked(move |_| {
-            if let Some(obj) = obj_weak.upgrade() {
-                let fd = gtk::FileDialog::new();
-                fd.set_title(&gettext("Add Music Folder"));
-                let gr = group_ref3.clone();
-                fd.select_folder(Some(&obj), None::<&gio::Cancellable>, move |result| {
-                    if let Ok(file) = result {
-                        if let Some(path) = file.path() {
-                            let path_str = path.to_string_lossy().to_string();
-                            let display = display_path(&path_str);
-                            save_display_name(&path_str, &display);
-                            let s = gio::Settings::new(config::APP_ID);
-                            let mut cur: Vec<String> = s.strv("music-folders").iter().map(|s| s.to_string()).collect();
-                            if !cur.contains(&path_str) {
-                                cur.push(path_str.clone());
-                                let v: Vec<&str> = cur.iter().map(|s| s.as_str()).collect();
-                                s.set_strv("music-folders", v).ok();
-                                let row = adw::ActionRow::builder()
-                                    .title(Path::new(&path_str).file_name().unwrap_or_default().to_string_lossy().to_string())
-                                    .build();
-                                row.add_prefix(&gtk::Image::from_icon_name("fp-folder-music-symbolic"));
-                                gr.add(&row);
-                            }
-                        }
+            for mnt in &mnt_entries {
+                let expander = adw::ExpanderRow::builder()
+                    .title(Path::new(mnt).file_name().unwrap_or_default().to_string_lossy().to_string())
+                    .subtitle(mnt.clone())
+                    .build();
+                expander.add_prefix(&gtk::Image::from_icon_name("drive-harddisk-symbolic"));
+
+                // Populate children on first expand
+                let mnt_path = mnt.clone();
+                let current_group_ref = current_group.clone();
+                let obj_weak = self.obj().downgrade();
+                let map_ref = add_btn_map.clone();
+                let expanded_flag = std::rc::Rc::new(Cell::new(false));
+                let expanded_flag2 = expanded_flag.clone();
+                expander.connect_expanded_notify(move |exp| {
+                    if exp.is_expanded() && !expanded_flag2.get() {
+                        expanded_flag2.set(true);
+                        let add_fn = |w: &gtk::Widget| exp.add_row(w);
+                        Self::populate_mnt_children(&add_fn, &mnt_path, &current_group_ref, &obj_weak, &map_ref, 1);
                     }
                 });
+
+                mnt_group.add(&expander);
             }
-        });
-        content.append(&add_btn);
-        clamp.set_child(Some(&content));
+            page.add(&mnt_group);
+        }
+
+        clamp.set_child(Some(&page));
         scroll.set_child(Some(&clamp));
         toolbar_view.set_content(Some(&scroll));
         dlg.set_child(Some(&toolbar_view));
+
+        // Wire XDG Music toggle
+        let obj_weak = self.obj().downgrade();
+        music_row.connect_active_notify(move |r| {
+            let s = gio::Settings::new(config::APP_ID);
+            s.set_boolean("xdg-music-enabled", r.is_active()).ok();
+            let mut folders: Vec<String> = s.strv("music-folders").iter()
+                .map(|s| s.to_string()).collect();
+            if let Some(music_dir) = xdg_music_dir() {
+                if r.is_active() {
+                    if Path::new(&music_dir).is_dir() && !folders.contains(&music_dir) {
+                        folders.push(music_dir);
+                        let v: Vec<&str> = folders.iter().map(|s| s.as_str()).collect();
+                        s.set_strv("music-folders", v).ok();
+                    }
+                } else {
+                    folders.retain(|f| f != &music_dir);
+                    let v: Vec<&str> = folders.iter().map(|s| s.as_str()).collect();
+                    s.set_strv("music-folders", v).ok();
+                    // Remove the folder's songs from the DB
+                    if let Some(obj) = obj_weak.upgrade() {
+                        obj.imp().db.borrow().as_ref().unwrap().remove_root(&music_dir);
+                    }
+                }
+            }
+        });
 
         let obj_weak = self.obj().downgrade();
         dlg.connect_closed(move |_| {
@@ -1777,14 +1740,199 @@ impl FolderplayWindow {
                 let current: Vec<String> = settings.strv("music-folders").iter()
                     .map(|s| s.to_string()).filter(|f| !f.is_empty()).collect();
                 let has_new = current.iter().any(|f| !initial_folders.contains(f));
-                if has_new && !current.is_empty() {
+                let has_removed = initial_folders.iter().any(|f| !current.contains(f));
+                if (has_new || has_removed) && !current.is_empty() {
                     o.imp().start_scan_all_folders(current);
+                } else if current.is_empty() {
+                    o.imp().reset_library();
                 } else {
                     o.imp().load_all_folders();
                 }
             }
         });
         dlg.present(Some(&*self.obj()));
+    }
+
+    /// Populate the subtree under `parent_path`.
+    /// `add_row_fn` abstracts over ExpanderRow::add_row (first level) and
+    /// ListBox::append (deeper levels), avoiding nested ExpanderRows whose
+    /// CSS arrow state misbehaves in libadwaita.
+    fn populate_mnt_children(
+        add_row_fn: &dyn Fn(&gtk::Widget),
+        parent_path: &str,
+        current_group: &adw::PreferencesGroup,
+        obj_weak: &glib::WeakRef<super::FolderplayWindow>,
+        add_btn_map: &std::rc::Rc<RefCell<HashMap<String, gtk::Button>>>,
+        depth: u32,
+    ) {
+        const MAX_DEPTH: u32 = 4;
+
+        let Ok(entries) = std::fs::read_dir(parent_path) else { return; };
+        let mut dirs: Vec<String> = entries
+            .filter_map(|e| {
+                let e = e.ok()?;
+                let p = e.path();
+                // Skip hidden directories
+                let name = e.file_name().to_string_lossy().to_string();
+                if name.starts_with('.') { return None; }
+                if p.is_dir() { Some(p.to_string_lossy().to_string()) } else { None }
+            })
+            .collect();
+        dirs.sort();
+
+        if dirs.is_empty() {
+            let empty_row = adw::ActionRow::builder()
+                .title(gettext("No subfolders"))
+                .sensitive(false)
+                .build();
+            add_row_fn(empty_row.upcast_ref());
+            return;
+        }
+
+        for dir in dirs {
+            let name = Path::new(&dir).file_name().unwrap_or_default().to_string_lossy().to_string();
+
+            // "Add" button (shared between row types)
+            let add_btn = gtk::Button::builder()
+                .icon_name("fp-plus-circle-outline-symbolic")
+                .tooltip_text(gettext("Add this folder"))
+                .valign(gtk::Align::Center)
+                .build();
+            add_btn.add_css_class("flat");
+            add_btn.add_css_class("circular");
+
+            // Register in the shared map so remove can restore it
+            add_btn_map.borrow_mut().insert(dir.clone(), add_btn.clone());
+
+            let dir_clone = dir.clone();
+            let current_group_ref = current_group.clone();
+            let add_btn_ref = add_btn.clone();
+            let map_for_add = add_btn_map.clone();
+            add_btn.connect_clicked(move |_| {
+                let s = gio::Settings::new(config::APP_ID);
+                let mut folders: Vec<String> = s.strv("music-folders").iter()
+                    .map(|s| s.to_string()).collect();
+                if !folders.contains(&dir_clone) {
+                    folders.push(dir_clone.clone());
+                    let v: Vec<&str> = folders.iter().map(|s| s.as_str()).collect();
+                    s.set_strv("music-folders", v).ok();
+                    // Add to the "Selected Folders" group
+                    let new_row = adw::ActionRow::builder()
+                        .title(display_path(&dir_clone))
+                        .build();
+                    new_row.add_prefix(&gtk::Image::from_icon_name("fp-folder-music-symbolic"));
+                    let path_for_remove = dir_clone.clone();
+                    let gr = current_group_ref.clone();
+                    let nr = new_row.clone();
+                    let map_for_remove = map_for_add.clone();
+                    let remove_btn = gtk::Button::builder()
+                        .icon_name("fp-minus-circle-outline-symbolic")
+                        .tooltip_text(gettext("Remove this folder"))
+                        .valign(gtk::Align::Center)
+                        .build();
+                    remove_btn.add_css_class("flat");
+                    remove_btn.add_css_class("circular");
+                    remove_btn.connect_clicked(move |_| {
+                        gr.remove(&nr);
+                        let s2 = gio::Settings::new(config::APP_ID);
+                        let mut cur: Vec<String> = s2.strv("music-folders").iter().map(|s| s.to_string()).collect();
+                        cur.retain(|p| p != &path_for_remove);
+                        let v: Vec<&str> = cur.iter().map(|s| s.as_str()).collect();
+                        s2.set_strv("music-folders", v).ok();
+                        // Restore the add button in the /mnt tree
+                        if let Some(btn) = map_for_remove.borrow().get(&path_for_remove) {
+                            btn.set_sensitive(true);
+                            btn.set_icon_name("fp-plus-circle-outline-symbolic");
+                        }
+                    });
+                    new_row.add_suffix(&remove_btn);
+                    current_group_ref.add(&new_row);
+                    // Visual feedback: disable the add button
+                    add_btn_ref.set_sensitive(false);
+                    add_btn_ref.set_icon_name("object-select-symbolic");
+                }
+            });
+
+            // Check if already added
+            {
+                let s = gio::Settings::new(config::APP_ID);
+                let folders: Vec<String> = s.strv("music-folders").iter().map(|s| s.to_string()).collect();
+                if folders.contains(&dir) {
+                    add_btn.set_sensitive(false);
+                    add_btn.set_icon_name("object-select-symbolic");
+                }
+            }
+
+            if depth < MAX_DEPTH {
+                // Header row for this folder
+                let header_row = adw::ActionRow::builder()
+                    .title(&name)
+                    .subtitle(&dir)
+                    .build();
+                header_row.add_prefix(&gtk::Image::from_icon_name("folder-symbolic"));
+
+                // add_btn on the left of arrow so arrow is the rightmost suffix
+                header_row.add_suffix(&add_btn);
+
+                let arrow_btn = gtk::Button::from_icon_name("fp-down-smaller-symbolic");
+                arrow_btn.add_css_class("flat");
+                arrow_btn.add_css_class("circular");
+                arrow_btn.set_valign(gtk::Align::Center);
+                header_row.add_suffix(&arrow_btn);
+
+                // Children go into a plain gtk::Box — no card borders, no
+                // extra list separators.  Indented to hint at nesting depth.
+                let children_box = gtk::Box::new(gtk::Orientation::Vertical, 0);
+                children_box.set_margin_start(24);
+
+                let revealer = gtk::Revealer::builder()
+                    .transition_type(gtk::RevealerTransitionType::SlideDown)
+                    .reveal_child(false)
+                    .build();
+                revealer.set_child(Some(&children_box));
+
+                // Wrap header + revealer in ONE widget so the parent row list
+                // sees a single entry → single separator, no double line.
+                let folder_box = gtk::Box::new(gtk::Orientation::Vertical, 0);
+                folder_box.append(&header_row);
+                folder_box.append(&revealer);
+
+                add_row_fn(folder_box.upcast_ref());
+
+                let d = dir.clone();
+                let cgr = current_group.clone();
+                let ow = obj_weak.clone();
+                let map_ref = add_btn_map.clone();
+                let next_depth = depth + 1;
+                let populated = std::rc::Rc::new(Cell::new(false));
+                let is_exp = std::rc::Rc::new(Cell::new(false));
+                let rev_ref = revealer;
+                let cb_ref = children_box;
+
+                arrow_btn.connect_clicked(move |btn| {
+                    let opening = !is_exp.get();
+                    if opening && !populated.get() {
+                        populated.set(true);
+                        Self::populate_mnt_children(
+                            &|w| cb_ref.append(w),
+                            &d, &cgr, &ow, &map_ref, next_depth,
+                        );
+                    }
+                    is_exp.set(opening);
+                    rev_ref.set_reveal_child(opening);
+                    btn.set_icon_name(if opening { "fp-up-smaller-symbolic" } else { "fp-down-smaller-symbolic" });
+                });
+            } else {
+                // Leaf level: plain ActionRow (no further expansion)
+                let row = adw::ActionRow::builder()
+                    .title(&name)
+                    .subtitle(&dir)
+                    .build();
+                row.add_prefix(&gtk::Image::from_icon_name("folder-symbolic"));
+                row.add_suffix(&add_btn);
+                add_row_fn(row.upcast_ref());
+            }
+        }
     }
 
     fn reset_library(&self) {
@@ -1883,6 +2031,7 @@ impl FolderplayWindow {
 
     /// Show the loading screen and launch a deep scan with progress reporting.
     /// Called when the user adds a brand-new folder.
+    #[allow(dead_code)]
     fn start_scan_new_folder(&self, path: String) {
         // Reset navigation to root
         *self.root_folder.borrow_mut() = None;

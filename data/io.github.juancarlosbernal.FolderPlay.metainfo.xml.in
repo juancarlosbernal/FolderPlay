@@ -70,15 +70,29 @@
   </requires>
 
   <releases>
+    <release version="1.0.3" date="2026-04-19">
+      <description>
+      <ul>
+        <li>Added support for loading folders from secondary drives or NAS network shares mounted under /mnt.</li>
+        <li>New menu for adding folders to the collection.</li>
+        <li>Improved translations for Spanish, Portuguese, German and Russian.</li>
+        <li>Cosmetic improvements.</li>
+        </ul>
+      </description>
+    </release>
+   <release version="1.0.2" date="2026-04-17">
+      <description>
+        <p>Bug fixes</p>
+      </description>
+    </release>
    <release version="1.0.1" date="2026-04-17">
       <description>
-        <p>Fix: authorize folder access via portal.</p>
         <p>Bug fixes</p>
       </description>
     </release>
     <release version="1.0.0" date="2026-04-14">
       <description>
-        <p>First Release!</p>
+        <p>First Release</p>
       </description>
     </release>
   </releases>

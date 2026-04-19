@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: folderplay 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-14 15:05-0400\n"
+"POT-Creation-Date: 2026-04-18 12:00-0400\n"
 "PO-Revision-Date: 2026-04-14 12:00-0400\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese\n"
@@ -16,455 +16,233 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/window.py:395
+#: src/window/imp.rs
 msgid "Search"
 msgstr "Pesquisar"
 
-#: src/window.py:403
+#: src/window/imp.rs
 msgid "Go to root folder"
 msgstr "Ir para a pasta raiz"
 
-#: src/window.py:420 src/window.py:796
+#: src/window/imp.rs
 msgid "Grid view"
 msgstr "Vista em grelha"
 
-#: src/window.py:436
+#: src/window/imp.rs
 msgid "Search songs, artist or album…"
 msgstr "Pesquisar músicas, artista ou álbum…"
 
-#: src/window.py:458 src/window.py:1127 src/window.py:1504 src/window.py:1529
-#: src/window.py:1548 src/window.py:2243 src/window.py:2633
+#: src/window/imp.rs
 msgid "Folders"
 msgstr "Pastas"
 
-#: src/window.py:475
+#: src/window/imp.rs
 msgid "No Music Folder"
 msgstr "Nenhuma pasta de música"
 
-#: src/window.py:476
+#: src/window/imp.rs
 msgid "Select a folder to start playing"
 msgstr "Selecione uma pasta para começar a reproduzir"
 
-#: src/window.py:477 src/window.py:1449
+#: src/window/imp.rs
 msgid "Add Music Folder"
 msgstr "Adicionar pasta de música"
 
-#: src/window.py:487
+#: src/window/imp.rs
 msgid "No results found"
 msgstr "Nenhum resultado encontrado"
 
-#: src/window.py:488
+#: src/window/imp.rs
 msgid "Try another title, artist, or album"
 msgstr "Tente outro título, artista ou álbum"
 
-#: src/window.py:559
+#: src/window/imp.rs
 msgid "Toggle Browse Panel"
 msgstr "Mostrar/ocultar painel de navegação"
 
-#: src/window.py:566
+#: src/window/imp.rs
 msgid "Go to Playing Folder"
 msgstr "Ir para a pasta em reprodução"
 
-#: src/window.py:586 src/window.py:1159
+#: src/window/imp.rs
 msgid "Song Info"
 msgstr "Info da música"
 
-#: src/window.py:596
+#: src/window/imp.rs
 msgid "Menu"
 msgstr "Menu"
 
-#: src/window.py:608
+#: src/window/imp.rs
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/window.py:615
+#: src/window/imp.rs
 msgid "Close"
 msgstr "Fechar"
 
-#: src/window.py:668
+#: src/window/imp.rs
 msgid "Select a song"
 msgstr "Selecione uma música"
 
-#: src/window.py:720 src/window.py:2450 src/window.py:2692
+#: src/window/imp.rs
 msgid "Consecutive"
 msgstr "Consecutivo"
 
-#: src/window.py:749
+#: src/window/imp.rs
 msgid "Volume"
 msgstr "Volume"
 
-#: src/window.py:776
+#: src/window/imp.rs
 msgid "Manage Folders…"
 msgstr "Gerir pastas…"
 
-#: src/window.py:780 src/window.py:1347 src/window.py:1357 src/window.py:1367
+#: src/window/imp.rs
 msgid "Anti Bad Bunny"
 msgstr "Anti Bad Bunny"
 
-#: src/window.py:784 src/preferences.py:28
+#: src/window/imp.rs src/preferences.rs
 msgid "Preferences"
 msgstr "Preferências"
 
-#: src/window.py:785
+#: src/window/imp.rs
 msgid "Keyboard Shortcuts"
 msgstr "Atalhos de teclado"
 
-#: src/window.py:786
+#: src/window/imp.rs
 msgid "About FolderPlay"
 msgstr "Sobre o FolderPlay"
 
-#: src/window.py:796
+#: src/window/imp.rs
 msgid "List view"
 msgstr "Vista em lista"
 
-#: src/window.py:1180
+#: src/window/imp.rs
 msgid "Tags"
 msgstr "Tags"
 
-#: src/window.py:1182
+#: src/window/imp.rs
 msgid "Title"
 msgstr "Título"
 
-#: src/window.py:1183
+#: src/window/imp.rs
 msgid "Artist"
 msgstr "Artista"
 
-#: src/window.py:1184
+#: src/window/imp.rs
 msgid "Album"
 msgstr "Álbum"
 
-#: src/window.py:1185
+#: src/window/imp.rs
 msgid "Year"
 msgstr "Ano"
 
-#: src/window.py:1193
-msgid "Audio"
-msgstr "Áudio"
-
-#: src/window.py:1203
-msgid "Duration"
-msgstr "Duração"
-
-#: src/window.py:1204
-msgid "Sample Rate"
-msgstr "Taxa de amostragem"
-
-#: src/window.py:1205
-msgid "Bit Depth"
-msgstr "Profundidade de bits"
-
-#: src/window.py:1206
-msgid "Bitrate"
-msgstr "Taxa de bits"
-
-#: src/window.py:1207
-msgid "Channels"
-msgstr "Canais"
-
-#: src/window.py:1217
-msgid "File"
-msgstr "Ficheiro"
-
-#: src/window.py:1219
-msgid "Filename"
-msgstr "Nome do ficheiro"
-
-#: src/window.py:1224
-msgid "Location"
-msgstr "Localização"
-
-#: src/window.py:1235
-msgid "Size"
-msgstr "Tamanho"
-
-#: src/window.py:1312
-msgid "Select Music Folder"
-msgstr "Selecionar pasta de música"
-
-#: src/window.py:1359
-msgid ""
-"This function will remove from your collection any song by the artist Bad "
-"Bunny (to protect your mental health). Let's promote real music! (It doesn't "
-"delete the files from disk, it just hides them, in case you have a "
-"relapse...)"
-msgstr ""
-"Esta função removerá da sua coleção qualquer música do artista Bad Bunny "
-"(para proteger a sua saúde mental). Vamos promover música de verdade! (Não "
-"apaga os ficheiros do disco, apenas os oculta, caso tenha uma recaída...)"
-
-#: src/window.py:1397
-msgid "Manage Folders"
-msgstr "Gerir pastas"
-
-#: src/window.py:1413
-msgid "Music Folders"
-msgstr "Pastas de música"
-
-#: src/window.py:1414
-msgid "Add local folders to build your music library"
-msgstr "Adicione pastas locais para criar a sua biblioteca musical"
-
-#: src/window.py:1430
-msgid "Remove this folder"
-msgstr "Remover esta pasta"
-
-#: src/window.py:1476
-msgid "Add Folder"
-msgstr "Adicionar pasta"
-
-#: src/window.py:1522 src/window.py:1634 src/window.py:2241 src/window.py:2649
-msgid "Folder"
-msgstr "Pasta"
-
-#: src/window.py:1747
-#, python-format
-msgid "%d song"
-msgid_plural "%d songs"
-msgstr[0] "%d música"
-msgstr[1] "%d músicas"
-
-#: src/window.py:2249
-#, python-format
-msgid "Search: %s"
-msgstr "Pesquisa: %s"
-
-#: src/window.py:2692
-msgid "Repeat Once"
-msgstr "Repetir uma vez"
-
-#: src/window.py:2692
-msgid "Repeat Indefinitely"
-msgstr "Repetir indefinidamente"
-
-#: src/main.py:68
-msgid "translator-credits"
-msgstr ""
-
-#: src/main.py:72
-msgid ""
-"FolderPlay is a minimalist music player developed in Rust and GTK4. Its "
-"philosophy is simple: letting you enjoy your local collection by faithfully "
-"respecting your disk's folder structure—it doesn't group by artist, album, "
-"or genre. It simply respects your order.\n"
-"\n"
-"Designed with a strong focus on Lossless Hi-Res audio playback."
-msgstr ""
-"FolderPlay é um reprodutor de música minimalista desenvolvido em Rust e "
-"GTK4. Sua filosofia é simples: desfrutar da sua coleção local respeitando "
-"fielmente a estrutura de pastas do seu disco — sem agrupar por artista, "
-"álbum ou gênero. Simplesmente respeita sua ordem.\n"
-"\n"
-"Projetado com forte foco na reprodução de áudio Lossless Hi-Res."
-
-#: src/preferences.py:14
-msgid ""
-"Selects the best available output. Prefers HiFi when PipeWire is present, "
-"otherwise falls back to Standard."
-msgstr ""
-"Seleciona a melhor saída disponível. Prefere HiFi quando o PipeWire está "
-"presente, caso contrário usa Standard."
-
-#: src/preferences.py:16
-msgid ""
-"Passthrough output for bit-perfect playback via PipeWire or ALSA. Ideal for "
-"Hi-Res lossless audio (96 – 192 kHz)."
-msgstr ""
-"Saída direta para reprodução bit-perfect via PipeWire ou ALSA. Ideal para "
-"áudio Hi-Res sem perdas (96 – 192 kHz)."
-
-#: src/preferences.py:18
-msgid ""
-"Legacy output via PulseAudio. Audio is resampled to a common rate (44.1 – 48 "
-"kHz). Compatible with all systems."
-msgstr ""
-"Saída tradicional via PulseAudio. O áudio é reamostrado a uma taxa comum "
-"(44,1 – 48 kHz). Compatível com todos os sistemas."
-
-#: src/preferences.py:34
-msgid "Audio Output"
-msgstr "Saída de áudio"
-
-#: src/preferences.py:35
-msgid ""
-"HiFi sends audio directly to your DAC without resampling. Standard uses "
-"PulseAudio for maximum compatibility."
-msgstr ""
-"HiFi envia o áudio diretamente ao seu DAC sem reamostragem. Standard usa "
-"PulseAudio para máxima compatibilidade."
-
-#: src/preferences.py:40
-msgid "Output"
-msgstr "Saída"
-
-#: src/preferences.py:43
-msgid "Automatic"
-msgstr "Automático"
-
-#: src/preferences.py:44
-msgid "HiFi (Bit-perfect)"
-msgstr "HiFi (Bit-perfect)"
-
-#: src/preferences.py:45
-msgid "Standard (PulseAudio)"
-msgstr "Standard (PulseAudio)"
-
-#: src/preferences.py:63
-msgid "Appearance"
-msgstr "Aparência"
-
-#: src/preferences.py:66
-msgid "Style"
-msgstr "Estilo"
-
-#: src/preferences.py:67
-msgid "Choose between light and dark appearance"
-msgstr "Escolha entre aparência clara e escura"
-
-#: src/preferences.py:69
-msgid "System"
-msgstr "Sistema"
-
-#: src/preferences.py:69
-msgid "Light"
-msgstr "Claro"
-
-#: src/preferences.py:69
-msgid "Dark"
-msgstr "Escuro"
-
-#: data/org.gnome.folderplay.desktop.in:2
-#: data/org.gnome.folderplay.metainfo.xml.in:7
-msgid "FolderPlay"
-msgstr "FolderPlay"
-
-#: data/org.gnome.folderplay.desktop.in:8
-msgid "GTK;Music;Player;Audio;"
-msgstr "GTK;Música;Reprodutor;Áudio;"
-
-#: data/org.gnome.folderplay.metainfo.xml.in:8
-msgid "Folder-based music player"
-msgstr "Reprodutor de música por pastas"
-
-#: data/org.gnome.folderplay.metainfo.xml.in:10
-msgid "FolderPlay is a minimalist music player developed in Rust and GTK4. Its philosophy is simple: letting you enjoy your local collection by faithfully respecting your disk's folder structure—it doesn't group by artist, album, or genre. It simply respects your order."
-msgstr "FolderPlay é um reprodutor de música minimalista desenvolvido em Rust e GTK4. Sua filosofia é simples: desfrutar da sua coleção local respeitando fielmente a estrutura de pastas do seu disco — sem agrupar por artista, álbum ou gênero. Simplesmente respeita sua ordem."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:11
-msgid "Designed with a strong focus on Lossless Hi-Res audio playback."
-msgstr "Projetado com forte foco na reprodução de áudio Lossless Hi-Res."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:12
-msgid "Features"
-msgstr "Recursos"
-
-#: data/org.gnome.folderplay.metainfo.xml.in:14
-msgid "Above all, simple and intuitive."
-msgstr "Acima de tudo, simples e intuitivo."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:15
-msgid "Displays your music folders in the exact order you have them on your disk."
-msgstr "Exibe suas pastas de música na ordem exata em que estão no seu disco."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:16
-msgid "Supports Hi-Res Lossless audio formats: FLAC up to 384 kHz / 32-bit, DSF / DFF (DSD) — DSD64 (352.8 kHz), DSD128 (705.6 kHz), DSD256 (1.4 MHz), DSD512 (2.8 MHz), and all other popular audio formats."
-msgstr "Suporta formatos de áudio Hi-Res sem perdas: FLAC até 384 kHz / 32 bits, DSF / DFF (DSD) — DSD64 (352,8 kHz), DSD128 (705,6 kHz), DSD256 (1,4 MHz), DSD512 (2,8 MHz), e todos os outros formatos de áudio populares."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:17
-msgid "HiFi audio output selector (PipeWire/ALSA) for passthrough with external DAC, or standard legacy output for compatibility (PulseAudio)."
-msgstr "Seletor de saída de áudio HiFi (PipeWire/ALSA) para passthrough com DAC externo, ou saída padrão para compatibilidade (PulseAudio)."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:18
-msgid "Smooth folder navigation. Stores song metadata, cover art, and folder information in a local database — no disk reads required to display your collection. Populates the database in seconds and updates changes silently in the background, allowing you to manage large music libraries effortlessly."
-msgstr "Navegação fluida entre pastas. Armazena metadados de músicas, capas e informações de pastas em um banco de dados local — sem acesso ao disco necessário para exibir sua coleção. Preenche o banco de dados em segundos e atualiza as alterações silenciosamente em segundo plano, permitindo que você gerencie grandes bibliotecas musicais sem esforço."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:19
-msgid "Anti Bad Bunny feature: removes any Bad Bunny song from your collection (for the sake of your mental health). Let's promote real music! (Files are not deleted from disk — they are just hidden, in case you have a relapse...)."
-msgstr "Recurso Anti-Bad Bunny: remove qualquer música do Bad Bunny da sua coleção (pelo bem da sua saúde mental). Vamos promover a música de verdade! (Os arquivos não são excluídos do disco — apenas são ocultados, caso você tenha uma recaída...)."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:20
-msgid "Instant search by song, artist, or album."
-msgstr "Pesquisa instantânea por música, artista ou álbum."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:21
-msgid "Fluid adaptive UI for different screen sizes."
-msgstr "Interface adaptativa fluida para diferentes tamanhos de tela."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:22
-msgid "Blurs the background color based on the dominant color of the currently playing track's cover art."
-msgstr "Desfoca a cor de fundo com base na cor dominante da capa da música em reprodução."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:23
-msgid "Light and Dark mode."
-msgstr "Modo claro e escuro."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:24
-msgid "Built following the GNOME Human Interface Guidelines, using GTK4, Python, libadwaita, GStreamer, GIO, and GstPbutils."
-msgstr "Desenvolvido seguindo as Diretrizes de Interface Humana do GNOME, usando GTK4, Python, libadwaita, GStreamer, GIO e GstPbutils."
-
-#: data/org.gnome.folderplay.metainfo.xml.in:29
-msgid "Developer name"
-msgstr "Juan Carlos Bernal"
-
-#: data/org.gnome.folderplay.metainfo.xml.in:62
-msgid "Browsing a Hi-Res FLAC folder in list view"
-msgstr "Navegando em uma pasta FLAC Hi-Res em vista de lista"
-
-#: data/org.gnome.folderplay.metainfo.xml.in:66
-msgid "Grid folder view with cover art and adaptive background color"
-msgstr "Vista em grade com capas e cor de fundo adaptativa"
-
-#: data/org.gnome.folderplay.metainfo.xml.in:70
-msgid "Compact player view"
-msgstr "Vista compacta do reprodutor"
-
-#: data/org.gnome.folderplay.metainfo.xml.in:74
-msgid "Adaptive narrow player view"
-msgstr "Vista estreita adaptativa do reprodutor"
-
-#: data/org.gnome.folderplay.metainfo.xml.in:88
-msgid "First Release!"
-msgstr "Primeiro lançamento!"
-
-#: src/shortcuts-dialog.ui:6
-msgid "Shortcuts"
-msgstr "Atalhos"
-
-#: src/shortcuts-dialog.ui:9
-msgctxt "shortcut window"
-msgid "Play / Pause"
-msgstr "Reproduzir / Pausar"
-
-#: src/shortcuts-dialog.ui:15
-msgctxt "shortcut window"
-msgid "Next Track"
-msgstr "Faixa seguinte"
-
-#: src/shortcuts-dialog.ui:21
-msgctxt "shortcut window"
-msgid "Previous Track"
-msgstr "Faixa anterior"
-
-#: src/shortcuts-dialog.ui:27
-msgctxt "shortcut window"
-msgid "Open Folder"
-msgstr "Abrir pasta"
-
-#: src/shortcuts-dialog.ui:33
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "Sair"
-
-#: src/window.py
-msgid "Album Artist"
-msgstr "Artista do álbum"
-
-#: src/window.py
+#: src/window/imp.rs
 msgid "Genre"
 msgstr "Género"
 
-#: src/window.py
+#: src/window/imp.rs
 msgid "Track"
 msgstr "Faixa"
+
+#: src/window/imp.rs
+msgid "Album Artist"
+msgstr "Artista do álbum"
+
+#: src/window/imp.rs
+msgid "Audio"
+msgstr "Áudio"
+
+#: src/window/imp.rs
+msgid "Format"
+msgstr "Formato"
+
+#: src/window/imp.rs
+msgid "Duration"
+msgstr "Duração"
+
+#: src/window/imp.rs
+msgid "Sample Rate"
+msgstr "Taxa de amostragem"
+
+#: src/window/imp.rs
+msgid "Bit Depth"
+msgstr "Profundidade de bits"
+
+#: src/window/imp.rs
+msgid "Bitrate"
+msgstr "Taxa de bits"
+
+#: src/window/imp.rs
+msgid "Channels"
+msgstr "Canais"
+
+#: src/window/imp.rs
+msgid "File"
+msgstr "Ficheiro"
+
+#: src/window/imp.rs
+msgid "Filename"
+msgstr "Nome do ficheiro"
+
+#: src/window/imp.rs
+msgid "Location"
+msgstr "Localização"
+
+#: src/window/imp.rs
+msgid "Size"
+msgstr "Tamanho"
+
+#: src/window/imp.rs
+msgid "This function will remove from your collection any song by the artist Bad Bunny (to protect your mental health). Let's promote real music! (It doesn't delete the files from disk, it just hides them, in case you have a relapse...)"
+msgstr "Esta função removerá da sua coleção qualquer música do artista Bad Bunny (para proteger a sua saúde mental). Vamos promover música de verdade! (Não apaga os ficheiros do disco, apenas os oculta, caso tenha uma recaída...)"
+
+#: src/window/imp.rs
+msgid "Manage Folders"
+msgstr "Gerir pastas"
+
+#: src/window/imp.rs
+msgid "Music Directory"
+msgstr "Diretório de música"
+
+#: src/window/imp.rs
+msgid "Include your personal music directory"
+msgstr "Incluir o seu diretório de música pessoal"
+
+#: src/window/imp.rs
+msgid "Selected Folders"
+msgstr "Pastas selecionadas"
+
+#: src/window/imp.rs
+msgid "Folders currently in your library"
+msgstr "Pastas atualmente na sua biblioteca"
+
+#: src/window/imp.rs
+msgid "Remove this folder"
+msgstr "Remover esta pasta"
+
+#: src/window/imp.rs
+msgid "External Disks"
+msgstr "Discos externos"
+
+#: src/window/imp.rs
+msgid ""
+"Browse disks mounted in /mnt\n"
+"(To add a network disk or NAS, you must mount it in /mnt/ and it will appear in the options below)"
+msgstr ""
+"Explorar discos montados em /mnt\n"
+"(Para adicionar um disco de rede ou NAS, é necessário montá-lo em /mnt/ e ele aparecerá nas opções abaixo)"
+
+#: src/window/imp.rs
+msgid "No subfolders"
+msgstr "Sem subpastas"
+
+#: src/window/imp.rs
+msgid "Add this folder"
+msgstr "Adicionar esta pasta"
+
+#: src/window/imp.rs
+msgid "Folder"
+msgstr "Pasta"
 
 #: src/window/imp.rs
 msgid "Scanning…"
@@ -479,3 +257,207 @@ msgstr[1] "{n} canções encontradas…"
 #: src/window/imp.rs
 msgid "Reading covers…"
 msgstr "A ler capas…"
+
+#: src/window/imp.rs
+msgid "{n} song"
+msgid_plural "{n} songs"
+msgstr[0] "{n} canção"
+msgstr[1] "{n} canções"
+
+#: src/window/imp.rs
+msgid "Repeat Once"
+msgstr "Repetir uma vez"
+
+#: src/window/imp.rs
+msgid "Repeat Indefinitely"
+msgstr "Repetir indefinidamente"
+
+#: src/application.rs
+msgid "translator-credits"
+msgstr ""
+
+#: src/application.rs
+msgid "FolderPlay is a minimalist music player developed in Rust and GTK4. Its philosophy is simple: letting you enjoy your local collection by faithfully respecting your disk's folder structure—it doesn't group by artist, album, or genre. It simply respects your order."
+msgstr "FolderPlay é um reprodutor de música minimalista desenvolvido em Rust e GTK4. Sua filosofia é simples: desfrutar da sua coleção local respeitando fielmente a estrutura de pastas do seu disco — sem agrupar por artista, álbum ou gênero. Simplesmente respeita sua ordem."
+
+#: src/application.rs
+msgid "Designed with a strong focus on Lossless Hi-Res audio playback."
+msgstr "Projetado com forte foco na reprodução de áudio Lossless Hi-Res."
+
+#: src/preferences.rs
+msgid "Audio Output"
+msgstr "Saída de áudio"
+
+#: src/preferences.rs
+msgid "HiFi sends audio directly to your DAC without resampling. Standard uses PulseAudio for maximum compatibility."
+msgstr "HiFi envia o áudio diretamente ao seu DAC sem reamostragem. Standard usa PulseAudio para máxima compatibilidade."
+
+#: src/preferences.rs
+msgid "Output"
+msgstr "Saída"
+
+#: src/preferences.rs
+msgid "Automatic"
+msgstr "Automático"
+
+#: src/preferences.rs
+msgid "HiFi (Bit-perfect)"
+msgstr "HiFi (Bit-perfect)"
+
+#: src/preferences.rs
+msgid "Standard (PulseAudio)"
+msgstr "Standard (PulseAudio)"
+
+#: src/preferences.rs
+msgid "Selects the best available output. Prefers HiFi when PipeWire is present, otherwise falls back to Standard."
+msgstr "Seleciona a melhor saída disponível. Prefere HiFi quando o PipeWire está presente, caso contrário usa Standard."
+
+#: src/preferences.rs
+msgid "Passthrough output for bit-perfect playback via PipeWire or ALSA. Ideal for Hi-Res lossless audio (96 – 192 kHz)."
+msgstr "Saída direta para reprodução bit-perfect via PipeWire ou ALSA. Ideal para áudio Hi-Res sem perdas (96 – 192 kHz)."
+
+#: src/preferences.rs
+msgid "Legacy output via PulseAudio. Audio is resampled to a common rate (44.1 – 48 kHz). Compatible with all systems."
+msgstr "Saída tradicional via PulseAudio. O áudio é reamostrado a uma taxa comum (44,1 – 48 kHz). Compatível com todos os sistemas."
+
+#: src/preferences.rs
+msgid "Appearance"
+msgstr "Aparência"
+
+#: src/preferences.rs
+msgid "Style"
+msgstr "Estilo"
+
+#: src/preferences.rs
+msgid "Choose between light and dark appearance"
+msgstr "Escolha entre aparência clara e escura"
+
+#: src/preferences.rs
+msgid "System"
+msgstr "Sistema"
+
+#: src/preferences.rs
+msgid "Light"
+msgstr "Claro"
+
+#: src/preferences.rs
+msgid "Dark"
+msgstr "Escuro"
+
+#: data/io.github.juancarlosbernal.FolderPlay.desktop.in
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "FolderPlay"
+msgstr "FolderPlay"
+
+#: data/io.github.juancarlosbernal.FolderPlay.desktop.in
+msgid "GTK;Music;Player;Audio;"
+msgstr "GTK;Música;Reprodutor;Áudio;"
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Folder-based music player"
+msgstr "Reprodutor de música por pastas"
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "FolderPlay is a minimalist music player developed in Rust and GTK4. Its philosophy is simple: letting you enjoy your local collection by faithfully respecting your disk’s folder structure—it doesn’t group by artist, album, or genre. It simply respects your order."
+msgstr "FolderPlay é um reprodutor de música minimalista desenvolvido em Rust e GTK4. Sua filosofia é simples: desfrutar da sua coleção local respeitando fielmente a estrutura de pastas do seu disco — sem agrupar por artista, álbum ou gênero. Simplesmente respeita sua ordem."
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Features"
+msgstr "Recursos"
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Above all, simple and intuitive."
+msgstr "Acima de tudo, simples e intuitivo."
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Displays your music folders in the exact order you have them on your disk."
+msgstr "Exibe suas pastas de música na ordem exata em que estão no seu disco."
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Supports Hi-Res Lossless audio formats: FLAC up to 384 kHz / 32-bit, DSF / DFF (DSD) — DSD64 (352.8 kHz), DSD128 (705.6 kHz), DSD256 (1.4 MHz), DSD512 (2.8 MHz), and all other popular audio formats."
+msgstr "Suporta formatos de áudio Hi-Res sem perdas: FLAC até 384 kHz / 32 bits, DSF / DFF (DSD) — DSD64 (352,8 kHz), DSD128 (705,6 kHz), DSD256 (1,4 MHz), DSD512 (2,8 MHz), e todos os outros formatos de áudio populares."
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "HiFi audio output selector (PipeWire/ALSA) for passthrough with external DAC, or standard legacy output for compatibility (PulseAudio)."
+msgstr "Seletor de saída de áudio HiFi (PipeWire/ALSA) para passthrough com DAC externo, ou saída padrão para compatibilidade (PulseAudio)."
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Smooth folder navigation. Stores song metadata, cover art, and folder information in a local database — no disk reads required to display your collection. Populates the database in seconds and updates changes silently in the background, allowing you to manage large music libraries effortlessly."
+msgstr "Navegação fluida entre pastas. Armazena metadados de músicas, capas e informações de pastas em um banco de dados local — sem acesso ao disco necessário para exibir sua coleção. Preenche o banco de dados em segundos e atualiza as alterações silenciosamente em segundo plano, permitindo que você gerencie grandes bibliotecas musicais sem esforço."
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Anti Bad Bunny feature: removes any Bad Bunny song from your collection (for the sake of your mental health). Let’s promote real music! (Files are not deleted from disk — they are just hidden, in case you have a relapse...)."
+msgstr "Recurso Anti-Bad Bunny: remove qualquer música do Bad Bunny da sua coleção (pelo bem da sua saúde mental). Vamos promover a música de verdade! (Os arquivos não são excluídos do disco — apenas são ocultados, caso você tenha uma recaída...)."
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Instant search by song, artist, or album."
+msgstr "Pesquisa instantânea por música, artista ou álbum."
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Fluid adaptive UI for different screen sizes."
+msgstr "Interface adaptativa fluida para diferentes tamanhos de tela."
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Blurs the background color based on the dominant color of the currently playing track’s cover art."
+msgstr "Desfoca a cor de fundo com base na cor dominante da capa da música em reprodução."
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Light and Dark mode."
+msgstr "Modo claro e escuro."
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Built following the GNOME Human Interface Guidelines, using GTK4, Rust, libadwaita, GStreamer, and GIO."
+msgstr "Desenvolvido seguindo as Diretrizes de Interface Humana do GNOME, usando GTK4, Rust, libadwaita, GStreamer e GIO."
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Developer name"
+msgstr "Juan Carlos Bernal"
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Browsing a Hi-Res FLAC folder in list view"
+msgstr "Navegando em uma pasta FLAC Hi-Res em vista de lista"
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Grid folder view with cover art and adaptive background color"
+msgstr "Vista em grade com capas e cor de fundo adaptativa"
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Compact player view"
+msgstr "Vista compacta do reprodutor"
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "Adaptive narrow player view"
+msgstr "Vista estreita adaptativa do reprodutor"
+
+#: data/io.github.juancarlosbernal.FolderPlay.metainfo.xml.in
+msgid "First Release!"
+msgstr "Primeiro lançamento!"
+
+#: src/shortcuts-dialog.ui
+msgid "Shortcuts"
+msgstr "Atalhos"
+
+#: src/shortcuts-dialog.ui
+msgctxt "shortcut window"
+msgid "Play / Pause"
+msgstr "Reproduzir / Pausar"
+
+#: src/shortcuts-dialog.ui
+msgctxt "shortcut window"
+msgid "Next Track"
+msgstr "Faixa seguinte"
+
+#: src/shortcuts-dialog.ui
+msgctxt "shortcut window"
+msgid "Previous Track"
+msgstr "Faixa anterior"
+
+#: src/shortcuts-dialog.ui
+msgctxt "shortcut window"
+msgid "Open Folder"
+msgstr "Abrir pasta"
+
+#: src/shortcuts-dialog.ui
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Sair"

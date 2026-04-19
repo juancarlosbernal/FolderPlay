@@ -36,5 +36,7 @@
     <file alias="fp-speaker-3-symbolic.svg">../data/icons/hicolor/scalable/actions/speaker-3-symbolic.svg</file>
     <file alias="fp-window-close-symbolic.svg">../data/icons/hicolor/scalable/actions/window-close-symbolic.svg</file>
     <file alias="fp-window-minimize-symbolic.svg">../data/icons/hicolor/scalable/actions/window-minimize-symbolic.svg</file>
+    <file alias="fp-down-smaller-symbolic.svg">../data/icons/hicolor/scalable/actions/down-smaller-symbolic.svg</file>
+    <file alias="fp-up-smaller-symbolic.svg">../data/icons/hicolor/scalable/actions/up-smaller-symbolic.svg</file>
     <file alias="hires-22.png">../data/icons/hicolor/scalable/apps/hires-22.png</file>
   </gresource></gresources>
