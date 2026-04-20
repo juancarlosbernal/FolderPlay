@@ -1511,6 +1511,13 @@ impl FolderplayWindow {
     }
 
     fn navigate_home(&self) {
+        let settings = gio::Settings::new(config::APP_ID);
+        let folders: Vec<String> = settings.strv("music-folders").iter()
+            .map(|s| s.to_string()).filter(|f| !f.is_empty()).collect();
+        if folders.is_empty() {
+            self.on_manage_folders();
+            return;
+        }
         self.search_btn.borrow().as_ref().unwrap().set_active(false);
         self.search_entry.borrow().as_ref().unwrap().set_text("");
         self.nav_stack.borrow_mut().clear();

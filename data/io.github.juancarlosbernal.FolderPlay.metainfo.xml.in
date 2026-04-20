@@ -70,6 +70,13 @@
   </requires>
 
   <releases>
+        <release version="1.0.4" date="2026-04-20">
+      <description>
+      <ul>
+        <li>UX improvements</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.3" date="2026-04-19">
       <description>
       <ul>
