@@ -1,7 +1,7 @@
 <p align="center"><img src="data/icons/hicolor/scalable/apps/io.github.juancarlosbernal.FolderPlay.svg">
 <h1 align="center">FolderPlay</h1>
 
-<p align="center"><a href='https://github.com/juancarlosbernal/FolderPlay'><img width='190' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/></a>  </p>
+<p align="center"><a href='https://flathub.org/en/apps/io.github.juancarlosbernal.FolderPlay'><img width='190' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/></a>  </p>
 
 <div align="center">
 
