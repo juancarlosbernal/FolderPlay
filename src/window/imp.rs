@@ -1707,6 +1707,14 @@ impl FolderplayWindow {
                 mnt_group.add(&expander);
             }
             page.add(&mnt_group);
+        } else {
+            let mnt_info_msg = gettext("This application has default access to the local Music folder ({}) and can have full access to any disk mounted at /mnt (which grants access to secondary drives, or network drives / shared folders from a NAS). It is therefore recommended to mount your drives at /mnt and configure them to auto-mount at system startup, for immediate access to your folders.\nAny drives mounted at /mnt will appear in this space to be added.")
+                .replace("{}", &display_path(&music_dir_label));
+            let mnt_empty_group = adw::PreferencesGroup::builder()
+                .title(gettext("External Disks"))
+                .description(mnt_info_msg)
+                .build();
+            page.add(&mnt_empty_group);
         }
 
         clamp.set_child(Some(&page));

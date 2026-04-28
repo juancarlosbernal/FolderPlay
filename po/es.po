@@ -236,6 +236,10 @@ msgid "Browse disks mounted in /mnt\n(To add a network disk or NAS, you must mou
 msgstr "Explorar discos montados en /mnt\n(Para agregar un disco de Red o NAS, debes montarlo en /mnt/ y aparecerá en las opciones de abajo)"
 
 #: src/window/imp.rs
+msgid "This application has default access to the local Music folder ({}) and can have full access to any disk mounted at /mnt (which grants access to secondary drives, or network drives / shared folders from a NAS). It is therefore recommended to mount your drives at /mnt and configure them to auto-mount at system startup, for immediate access to your folders.\nAny drives mounted at /mnt will appear in this space to be added."
+msgstr "Esta aplicación tiene acceso predeterminado a la carpeta de música local ({}) y puede tener acceso completo a cualquier disco montado en /mnt (lo que permite acceder a discos secundarios, unidades de red o carpetas compartidas de un NAS). Por lo tanto, se recomienda montar tus discos en /mnt y configurarlos para que se monten automáticamente al inicio del sistema, para tener acceso inmediato a tus carpetas.\nCualquier disco montado en /mnt aparecerá en este espacio para ser añadido."
+
+#: src/window/imp.rs
 msgid "No subfolders"
 msgstr "Sin subcarpetas"
 

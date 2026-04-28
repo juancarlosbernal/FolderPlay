@@ -234,6 +234,10 @@ msgid "Browse disks mounted in /mnt\n(To add a network disk or NAS, you must mou
 msgstr ""
 
 #: src/window/imp.rs
+msgid "This application has default access to the local Music folder ({}) and can have full access to any disk mounted at /mnt (which grants access to secondary drives, or network drives / shared folders from a NAS). It is therefore recommended to mount your drives at /mnt and configure them to auto-mount at system startup, for immediate access to your folders.\nAny drives mounted at /mnt will appear in this space to be added."
+msgstr ""
+
+#: src/window/imp.rs
 msgid "No subfolders"
 msgstr ""
 

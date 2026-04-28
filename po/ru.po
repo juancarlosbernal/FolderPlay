@@ -233,6 +233,10 @@ msgstr ""
 "(Чтобы добавить сетевой диск или NAS, необходимо примонтировать его в /mnt/ и он появится в параметрах ниже)"
 
 #: src/window/imp.rs
+msgid "This application has default access to the local Music folder ({}) and can have full access to any disk mounted at /mnt (which grants access to secondary drives, or network drives / shared folders from a NAS). It is therefore recommended to mount your drives at /mnt and configure them to auto-mount at system startup, for immediate access to your folders.\nAny drives mounted at /mnt will appear in this space to be added."
+msgstr "Это приложение имеет доступ по умолчанию к локальной папке с музыкой ({}) и может иметь полный доступ к любому диску, примонтированному в /mnt (что обеспечивает доступ к дополнительным дискам, сетевым дискам или общим папкам NAS). Поэтому рекомендуется монтировать диски в /mnt и настроить их автоматическое монтирование при запуске системы для немедленного доступа к папкам.\nЛюбой диск, примонтированный в /mnt, появится здесь для добавления."
+
+#: src/window/imp.rs
 msgid "No subfolders"
 msgstr "Нет подпапок"
 

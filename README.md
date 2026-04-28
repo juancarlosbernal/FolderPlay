@@ -31,7 +31,7 @@ Designed with a strong focus on **Lossless Hi-Res audio** playback.
 ## Features!
 
 - Above all, simple and intuitive.
-- Displays your music folders in the exact order you have them on your disk.
+- Displays your music folders in the exact order you have them on your disk. **Access to /home/music and secondary/network/NAS drives mounted at /mnt.**
 - Supports Hi-Res Lossless audio formats: FLAC up to 384 kHz / 32-bit, DSF / DFF (DSD) — DSD64 (352.8 kHz), DSD128 (705.6 kHz), DSD256 (1.4 MHz), DSD512 (2.8 MHz), and all other popular audio formats.
 - HiFi audio output selector (PipeWire/ALSA) for passthrough with external DAC, or standard legacy output for compatibility (PulseAudio).
 - Smooth folder navigation. Stores song metadata, cover art, and folder information in a local database — no disk reads required to display your collection. Populates the database in seconds and updates changes silently in the background, allowing you to manage large music libraries effortlessly. 
